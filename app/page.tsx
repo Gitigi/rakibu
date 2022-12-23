@@ -27,49 +27,39 @@ function Line({children, style}: any) {
 }
 
 function Row({ index, style, data }: any) {
-  if(data.current[index] != 2)
+  if(!data.current[index])
     return <p style={style}>Loading...</p>
   
+  const value = data.current[index]
+
   return <Line style={style}>
-    <div className='relative inline-flex items-stretch py-1 px-4 text-xl font-semibold text-gray-600 border-2 rounded-sm border-b-8 border-b-green-300'>
-      Salama
-      <span className='inline-flex items-center'>
-        <span className='relative ml-2 px-2 py-0.5 rounded-lg  right-0 leading-3 text-[0.7rem] bg-gray-900 text-white'>80%</span>
-      </span>
-    </div>
-    <div className='relative inline-flex items-stretch py-1 px-4 text-xl font-semibold text-gray-600 border-2 rounded-sm border-b-8 border-b-blue-300'>
-      Amini
-      <span className='inline-flex items-center'>
-        <span className='relative ml-2 px-2 py-0.5 rounded-lg  right-0 leading-3 text-[0.7rem] bg-gray-900 text-white'>70%</span>
-      </span>
-    </div>
-    <div className='relative inline-flex items-stretch py-1 px-4 text-xl font-semibold text-gray-600 border-2 rounded-sm border-b-8 border-b-blue-300'>
-      <img src='/api/images' className='h-[27px]' alt="word" />
-      <span className='inline-flex items-center'>
-        <span className='relative ml-2 px-2 py-0.5 rounded-lg  right-0 leading-3 text-[0.7rem] bg-gray-900 text-white'>70%</span>
-      </span>
-    </div>
+    {value.words.map((word: any) => {
+      const height = word.bbox[1][1] - word.bbox[0][1]
+      const width = word.bbox[1][0] - word.bbox[0][0]
+      return <div key={word.index} data-lang={word.lang} className='relative flex-shrink-0 inline-flex items-stretch py-1 px-4 text-xl font-semibold text-gray-600 border-2 rounded-sm border-b-8 data-[lang=en]:border-b-green-300 data-[lang=ar]:border-b-blue-300'>
+        <Image height={height} width={width} src={`/api/images/${word.name}/${word.section}/${word.line_index}/${word.index}`} className='max-h-[27px] w-auto' alt="word" />
+        {/* {word.text} */}
+        <span className='inline-flex items-center'>
+          <span className='ml-2 px-2 py-0.5 rounded-lg  right-0 leading-3 text-[0.7rem] bg-gray-900 text-white'>{word.text_accuracy.toFixed(2)}</span>
+        </span>
+      </div>
+    })}
   </Line>
 }
 
 export default function Home() {
-  const LOADING = 1;
-  const LOADED = 2;
   const itemStatusMap = useRef<any>({});
 
   const isItemLoaded = (index: number) => !!itemStatusMap.current[index];
-  const loadMoreItems = (startIndex: number, stopIndex: number) => {
+  const loadMoreItems = async (startIndex: number, stopIndex: number) => {
     for (let index: number = startIndex; index <= stopIndex; index++) {
-      itemStatusMap.current[index] = LOADING;
+      itemStatusMap.current[index] = null;
     }
-    return new Promise((resolve: (value: any) => void ) =>
-      setTimeout(() => {
-        for (let index = startIndex; index <= stopIndex; index++) {
-          itemStatusMap.current[index] = LOADED;
-        }
-        resolve(null);
-      }, 2500)
-    );
+    const res = await fetch(`/api/lines?start=${startIndex}&stop=${stopIndex}`)
+    const data = await res.json()
+    for (let index = startIndex; index <= stopIndex; index++) {
+      itemStatusMap.current[index] = data['data'][index - startIndex];
+    }
   };
 
   return (
@@ -83,14 +73,14 @@ export default function Home() {
               {({height, width}:any) => (
                 <InfiniteLoader
                   isItemLoaded={isItemLoaded}
-                  itemCount={1000}
+                  itemCount={100000}
                   loadMoreItems={loadMoreItems}
                 >
                   {({ onItemsRendered, ref }: any) => (
                     <List
                       className="List"
                       height={height}
-                      itemCount={1000}
+                      itemCount={100000}
                       itemData={itemStatusMap}
                       itemSize={55}
                       onItemsRendered={onItemsRendered}
@@ -100,9 +90,6 @@ export default function Home() {
                       {Row}
                     </List>
                   )}
-                  {/* <List height={height} itemCount={1000} itemSize={55} width={width}>
-                    {Row}
-                  </List> */}
                 </InfiniteLoader>
 
               )}
