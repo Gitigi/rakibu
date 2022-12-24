@@ -2,32 +2,29 @@
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import prisma from '../../lib/prisma'
+
 type Data = {
   data: any[],
   total: number,
 }
 
-type Query = {
-  start?: number,
-  stop?: number
-}
-
-let words: any[] = [];
-
-function loadWords() {
-  if(words.length) return;
-  let text = fs.readFileSync('./words.json')
-  words = JSON.parse(text.toString())
-}
-
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  loadWords()
-  const { start = 0, stop = 10 }: Query = req.query;
+  let start: number = Number(req.query.start || 0)
+  let stop: number = Number(req.query.stop || 10)
+  
+  const words = await prisma.word.findMany({
+    skip: start,
+    take: stop - start
+  })
+  // const total = await prisma.word.count()
+  const total = (await prisma.$queryRaw<[{count: number}]>`select * from words_count;`)[0]['count']
+  
   res.status(200).json({
-    total: words.length,
-    data: words.slice(start, stop),
+    total,
+    data: words,
   })
 }

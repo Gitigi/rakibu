@@ -10,6 +10,11 @@ npm run dev
 yarn dev
 ```
 
+Run Postgres DB
+```bash
+docker run --rm -v $PWD/db_data:/var/lib/postgresql/data -p 5432:5432 -e POSTGRES_PASSWORD=password postgres:15-alpine
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
