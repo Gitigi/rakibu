@@ -2,32 +2,32 @@
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import prisma from '../../lib/prisma'
+
 type Data = {
   data: any[],
   total: number,
 }
 
-type Query = {
-  start?: number,
-  stop?: number
-}
-
-let lines: any[] = [];
-
-function loadLines() {
-  if(lines.length) return;
-  let text = fs.readFileSync('./lines.json')
-  lines = JSON.parse(text.toString())
-}
-
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  loadLines()
-  const { start = 0, stop = 10 }: Query = req.query;
+  let start: number = Number(req.query.start || 0)
+  let stop: number = Number(req.query.stop || 10)
+  
+  const lines = await prisma.line.findMany({
+    skip: start,
+    take: stop - start + 1,
+    include: {
+      words: true
+    }
+  })
+  // const total = await prisma.line.count()
+  const total = (await prisma.$queryRaw<[{count: number}]>`select * from lines_count;`)[0]['count']
+  
   res.status(200).json({
-    total: lines.length,
-    data: lines.slice(start, stop),
+    total,
+    data: lines,
   })
 }
