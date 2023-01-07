@@ -7,6 +7,7 @@ import prisma from '../../lib/prisma'
 type Data = {
   data: any[],
   total: number,
+  start: number
 }
 
 export default async function handler(
@@ -28,6 +29,7 @@ export default async function handler(
   
   res.status(200).json({
     total,
+    start,
     data: lines,
   })
 }

@@ -6,7 +6,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        'line-anim': 'line-anim 1s linear infinite',
+      }
+    },
   },
   plugins: [],
 }

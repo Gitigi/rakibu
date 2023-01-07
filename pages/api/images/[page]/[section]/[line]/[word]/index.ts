@@ -3,11 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
 import fs from 'fs/promises'
 
+sharp.cache({items: 400, memory: 200})
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log(sharp.cache())
   const {page, section, line: line_idx, word: word_idx}: any = req.query
   const data = await fs.readFile(`json_files/${page}.json`, { encoding: 'utf8' });
   const page_json = JSON.parse(data)
