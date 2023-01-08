@@ -28,15 +28,12 @@ function Line({children}: any) {
 }
 
 function Row({ index, line: value }: any) {
-  if(!value)
-    return <p >Loading...</p>
-
   return <Line >
     {value.words.map((word: any) => <Word key={word.index} word={word} />)}
   </Line>
 }
 
-export default function Home({ children }) {
+export default function Lines({ children }: any) {
   const ref = useRef<any>(null)
   const paginationRef = useRef<any>(null)
   const [lines, setLines] = useState<any[]>([])
@@ -83,7 +80,6 @@ export default function Home({ children }) {
     e.preventDefault()
     let page = pageNumber + SKIP_SIZE
     page = page <= pages[pages.length - 1] ? page : pages[pages.length - 1]
-    console.log(`page = ${page}`)
     gotoPage(page)
   }
 
@@ -106,7 +102,7 @@ export default function Home({ children }) {
 
   const loadMore = useCallback( async () => {
     const startIndex = currentPos.current
-    const stopIndex = startIndex + 19
+    const stopIndex = startIndex + (PAGE_SIZE - 1)
     setLoadingNext(true)
     const data = await fetchData(startIndex, stopIndex)
     currentPos.current = stopIndex + 1
@@ -118,7 +114,7 @@ export default function Home({ children }) {
   }, [setLines])
 
   const loadMore2 = useCallback( async () => {
-    const usersToPrepend = 20
+    const usersToPrepend = PAGE_SIZE
     const nextFirstItemIndex = firstItemIndex - usersToPrepend
 
     if(firstItemIndex < 0 || nextFirstItemIndex < 0){

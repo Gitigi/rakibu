@@ -16,14 +16,16 @@ import {
   MegaphoneIcon,
   UserGroupIcon,
   XMarkIcon,
+  Bars3CenterLeftIcon,
+  QueueListIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
 
 
   { name: 'Dashboard', href: '/', icon: HomeIcon, current: true },
-  { name: 'Lines', href: '/lines', icon: CalendarIcon, current: false },
-  { name: 'Words', href: '/words', icon: UserGroupIcon, current: false },
+  { name: 'Lines', href: '/lines', icon: Bars3CenterLeftIcon, current: false },
+  { name: 'Words', href: '/words', icon: QueueListIcon, current: false },
   { name: 'Directory', href: '#', icon: MagnifyingGlassCircleIcon, current: false },
   { name: 'Announcements', href: '#', icon: MegaphoneIcon, current: false },
   { name: 'Office Map', href: '#', icon: MapIcon, current: false },

@@ -28,15 +28,12 @@ function Line({children}: any) {
 }
 
 function Row({ index, line: value }: any) {
-  if(!value)
-    return <p >Loading...</p>
-
   return <Line >
-    {value.words.map((word: any) => <Word key={word.index} word={word} />)}
+    {value.words.map((word: any) => <Word key={word.id} word={word} />)}
   </Line>
 }
 
-export default function Home({ children }) {
+export default function Words({ children }: any) {
   const ref = useRef<any>(null)
   const paginationRef = useRef<any>(null)
   const [lines, setLines] = useState<any[]>([])
@@ -49,6 +46,7 @@ export default function Home({ children }) {
 
   const PAGE_SIZE = 20
   const SKIP_SIZE = 500
+  const GROUP_SIZE = 6
 
   const [firstItemIndex, setFirstItemIndex] = useState(START_INDEX)
 
@@ -83,7 +81,6 @@ export default function Home({ children }) {
     e.preventDefault()
     let page = pageNumber + SKIP_SIZE
     page = page <= pages[pages.length - 1] ? page : pages[pages.length - 1]
-    console.log(`page = ${page}`)
     gotoPage(page)
   }
 
@@ -99,14 +96,25 @@ export default function Home({ children }) {
   }
 
   const fetchData = async (startIndex: number, stopIndex: number) => {
-    const res = await fetch(`/api/lines?start=${startIndex}&stop=${stopIndex}`)
-    const data = await res.json()
+    startIndex *= GROUP_SIZE
+    stopIndex = (stopIndex + 1) * GROUP_SIZE - 1
+    const res = await fetch(`/api/words?start=${startIndex}&stop=${stopIndex}`)
+    const data = await res.json();
+    data['data'] = data['data'].reduce((accumulator: any[], currentValue:any, index:number) => {
+      if( index % GROUP_SIZE === 0) {
+        accumulator.push({words: [currentValue]})
+      } else {
+        accumulator.at(-1)?.words.push(currentValue)
+      }
+      return accumulator
+    }, [])
+    data['total'] = Math.ceil(data['total'] / GROUP_SIZE)
     return data
   }
 
   const loadMore = useCallback( async () => {
     const startIndex = currentPos.current
-    const stopIndex = startIndex + 19
+    const stopIndex = startIndex + (PAGE_SIZE - 1)
     setLoadingNext(true)
     const data = await fetchData(startIndex, stopIndex)
     currentPos.current = stopIndex + 1
@@ -118,7 +126,7 @@ export default function Home({ children }) {
   }, [setLines])
 
   const loadMore2 = useCallback( async () => {
-    const usersToPrepend = 20
+    const usersToPrepend = PAGE_SIZE
     const nextFirstItemIndex = firstItemIndex - usersToPrepend
 
     if(firstItemIndex < 0 || nextFirstItemIndex < 0){
@@ -148,6 +156,7 @@ export default function Home({ children }) {
   }, [])
 
   const updatePageNumber = ({startIndex, endIndex}: any) => {
+    console.log(`start = ${startIndex}`)
     let page = Math.floor(startIndex / PAGE_SIZE) + 1
     setPageNumber(page)
     paginationRef.current.querySelector(`[data-index="${page}"]`)?.scrollIntoView()
