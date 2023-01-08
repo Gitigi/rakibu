@@ -1,19 +1,22 @@
 "use client"
 import { useRef, useCallback, useState, useEffect, MouseEventHandler } from 'react'
+import Link from 'next/link'
 import { Virtuoso } from 'react-virtuoso'
 
 import Image from 'next/image'
 import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid'
 
-function Word({ index, style }: any) {
-  return <div >
-    <div style={style} className='relative inline-flex items-stretch py-1 px-4 text-xl font-semibold text-gray-600 border-2 rounded-sm border-b-8 border-b-blue-300'>
-      Amini
-      <span className='inline-flex items-center'>
-        <span className='relative ml-2 px-2 py-0.5 rounded-lg  right-0 leading-3 text-[0.7rem] bg-gray-900 text-white'>70%</span>
-      </span>
-    </div>
-    </div>
+function Word({ word }: any) {
+  const height = word.bbox[1][1] - word.bbox[0][1]
+  const width = word.bbox[1][0] - word.bbox[0][0]
+
+  return <Link href={`/lines/word/${word.id}`} data-lang={word.lang} className='relative flex-shrink-0 inline-flex items-stretch py-1 px-4 text-xl font-semibold text-gray-600 border-2 rounded-sm border-b-8 data-[lang=en]:border-b-green-300 data-[lang=ar]:border-b-blue-300'>
+    {/* <Image height={height} width={width} src={`/api/images/${word.page}/${word.section}/${word.line_index}/${word.index}`} className='max-h-[27px] w-auto' alt="word" /> */}
+    {word.text}
+    <span className='inline-flex items-center'>
+      <span className='ml-2 px-2 py-0.5 rounded-lg  right-0 leading-3 text-[0.7rem] bg-gray-900 text-white'>{word.text_accuracy.toFixed(2)}</span>
+    </span>
+  </Link>
 }
 
 function Line({children}: any) {
@@ -29,21 +32,11 @@ function Row({ index, line: value }: any) {
     return <p >Loading...</p>
 
   return <Line >
-    {value.words.map((word: any) => {
-      const height = word.bbox[1][1] - word.bbox[0][1]
-      const width = word.bbox[1][0] - word.bbox[0][0]
-      return <div key={word.index} data-lang={word.lang} className='relative flex-shrink-0 inline-flex items-stretch py-1 px-4 text-xl font-semibold text-gray-600 border-2 rounded-sm border-b-8 data-[lang=en]:border-b-green-300 data-[lang=ar]:border-b-blue-300'>
-        {/* <Image height={height} width={width} src={`/api/images/${word.page}/${word.section}/${word.line_index}/${word.index}`} className='max-h-[27px] w-auto' alt="word" /> */}
-        {word.text}
-        <span className='inline-flex items-center'>
-          <span className='ml-2 px-2 py-0.5 rounded-lg  right-0 leading-3 text-[0.7rem] bg-gray-900 text-white'>{word.text_accuracy.toFixed(2)}</span>
-        </span>
-      </div>
-    })}
+    {value.words.map((word: any) => <Word key={word.index} word={word} />)}
   </Line>
 }
 
-export default function Home() {
+export default function Home({ children }) {
   const ref = useRef<any>(null)
   const paginationRef = useRef<any>(null)
   const [lines, setLines] = useState<any[]>([])
@@ -223,7 +216,9 @@ export default function Home() {
       <aside className="relative hidden w-96 flex-shrink-0 overflow-y-auto border-l border-gray-200 xl:flex xl:flex-col">
         {/* Start secondary column (hidden on smaller screens) */}
         <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-          <div className="h-full rounded-lg border-2 border-dashed border-gray-200" />
+          <div className="h-full rounded-lg border-2 border-dashed border-gray-200">
+            {children}
+          </div>
         </div>
         {/* End secondary column */}
       </aside>

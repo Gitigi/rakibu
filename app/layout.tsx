@@ -3,6 +3,9 @@
 import './globals.css'
 
 import { Fragment, useState } from 'react'
+import Link from 'next/link'
+import { useSelectedLayoutSegment } from 'next/navigation';
+
 import { Dialog, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -18,9 +21,9 @@ import {
 const navigation = [
 
 
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Teams', href: '#', icon: UserGroupIcon, current: false },
+  { name: 'Dashboard', href: '/', icon: HomeIcon, current: true },
+  { name: 'Lines', href: '/lines', icon: CalendarIcon, current: false },
+  { name: 'Words', href: '/words', icon: UserGroupIcon, current: false },
   { name: 'Directory', href: '#', icon: MagnifyingGlassCircleIcon, current: false },
   { name: 'Announcements', href: '#', icon: MegaphoneIcon, current: false },
   { name: 'Office Map', href: '#', icon: MapIcon, current: false },
@@ -37,6 +40,7 @@ export default function RootLayout({
 }) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const pathname = useSelectedLayoutSegment() || ''
 
   return (
     <html lang="en" className='h-full bg-gray-50'>
@@ -104,11 +108,11 @@ export default function RootLayout({
                         <nav aria-label="Sidebar" className="mt-5">
                           <div className="space-y-1 px-2">
                             {navigation.map((item) => (
-                              <a
+                              <Link
                                 key={item.name}
                                 href={item.href}
                                 className={classNames(
-                                  item.current
+                                  item.href === `/${pathname}`
                                     ? 'bg-gray-100 text-gray-900'
                                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                                   'group flex items-center px-2 py-2 text-base font-medium rounded-md'
@@ -122,7 +126,7 @@ export default function RootLayout({
                                   aria-hidden="true"
                                 />
                                 {item.name}
-                              </a>
+                              </Link>
                             ))}
                           </div>
                         </nav>
@@ -175,7 +179,7 @@ export default function RootLayout({
                             key={item.name}
                             href={item.href}
                             className={classNames(
-                              item.current
+                              item.href === `/${pathname}`
                                 ? 'bg-gray-900 text-white'
                                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                               'group flex items-center px-2 py-2 text-sm font-medium rounded-md'
