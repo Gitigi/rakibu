@@ -212,7 +212,7 @@ export default function Lines({ children }: any) {
       <aside className="relative hidden w-96 flex-shrink-0 overflow-y-auto border-l border-gray-200 xl:flex xl:flex-col">
         {/* Start secondary column (hidden on smaller screens) */}
         <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-          <div className="h-full rounded-lg border-2 border-dashed border-gray-200">
+          <div className="h-full rounded-lg border-2 border-solid border-gray-200 overflow-y-scroll">
             {children}
           </div>
         </div>
