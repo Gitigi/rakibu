@@ -11,33 +11,51 @@ datasource db {
 }
 
 model Word {
-  id              Int     @id @default(autoincrement())
-  page            String
-  section         String
-  line_index           Int
-  index           Int
-  bbox            Json
-  text            String
-  text_votes      Float
-  text_accuracy   Float
-  lang            String
-  lang_votes      Float
-  lang_accuracy   Float
-  line              Line    @relation(fields: [page, section, line_index], references: [page, section, index])
-  @@unique([page, section, line_index, index], name: "wordIdentifier")
+  id            Int          @id @default(autoincrement())
+  page          String
+  section       String
+  line_index    Int
+  index         Int
+  bbox          Json
+  text          String
+  text_votes    Float
+  text_accuracy Float
+  lang          String
+  lang_votes    Float
+  lang_accuracy Float
+  rakibu        Boolean      @default(false)
+  line          Line         @relation(fields: [page, section, line_index], references: [page, section, index])
+  predictions    Prediction[]
 
+  @@unique([page, section, line_index, index], name: "wordIdentifier")
   @@map("word")
 }
 
 model Line {
-  id        Int     @id @default(autoincrement())
-  page      String
-  section   String
-  index     Int
-  bbox      Json
-  accuracy  Float
-  words     Word[]
-  @@unique([page, section, index], name: "lineIdentifier")
+  id       Int    @id @default(autoincrement())
+  page     String
+  section  String
+  index    Int
+  bbox     Json
+  accuracy Float
+  words    Word[]
 
+  @@unique([page, section, index], name: "lineIdentifier")
   @@map("line")
+}
+
+model Prediction {
+  id         Int    @id @default(autoincrement())
+  model      String
+  page       String
+  section    String
+  line_index Int
+  index      Int
+  text       String
+  lang       String
+  accuracy   Float
+  word       Word   @relation(fields: [page, section, line_index, index], references: [page, section, line_index, index])
+
+  @@unique([page, section, line_index, index, model], name: "preditionIndentifier")
+  @@map("prediction")
 }
