@@ -8,6 +8,8 @@ import { ArrowLongLeftIcon, ArrowLongRightIcon, BarsArrowUpIcon, BarsArrowDownIc
 import { Combobox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
+import BinaryToggle from '@/ui/BinaryToggle'
+
 const people = [
   { id: 1, name: 'Wade Cooper' },
   { id: 2, name: 'Arlene Mccoy' },
@@ -249,22 +251,22 @@ export default function Lines({ children }: any) {
       <main className="relative z-0 flex-1 flex flex-col pt-2 px-4 sm:px-6 lg:px-8 overflow-y-auto focus:outline-none">
         {/* Start main area*/}
         <div className='py-4 z-10 border-2 rounded-xl px-2'>
-          <div className='flex gap-2 items-center'>
+          <div className='flex gap-4 items-center'>
             <div className='flex-1'>
               <input className='p-2 border-2 rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
             </div>
-            <div className='flex'>
-              <div className='bg-yellow-300 p-2 rounded-l-xl'><BarsArrowUpIcon className='h-8 w-8 text-gray-400' /></div>
-              <div className='bg-green-300 p-2 rounded-r-xl'><BarsArrowDownIcon className='h-8 w-8 text-gray-400' /></div>
-            </div>
-            <div className='flex'>
-              <div className='bg-yellow-300 p-2 rounded-l-xl'><DocumentTextIcon className='h-8 w-8 text-gray-400' /></div>
-              <div className='bg-green-300 p-2 rounded-r-xl'><PhotoIcon className='h-8 w-8 text-gray-400' /></div>
-            </div>
-            <div className='flex'>
-              <div className='bg-yellow-300 p-2 rounded-l-xl'><QuestionMarkCircleIcon className='h-8 w-8 text-gray-400' /></div>
-              <div className='bg-green-300 p-2 rounded-r-xl'><CheckBadgeIcon className='h-8 w-8 text-gray-400' /></div>
-            </div>
+            <BinaryToggle keys={['asc', 'desc']} maxSelect={1}>
+              <BarsArrowUpIcon className='h-6 w-6 text-gray-400' />
+              <BarsArrowDownIcon className='h-6 w-6 text-gray-400' />
+            </BinaryToggle>
+            <BinaryToggle keys={['text', 'image']}>
+              <DocumentTextIcon className='h-6 w-6 text-gray-400' />
+              <PhotoIcon className='h-6 w-6 text-gray-400' />
+            </BinaryToggle>
+            <BinaryToggle keys={['sirakibu', 'rakibu']}>
+              <QuestionMarkCircleIcon className='h-6 w-6 text-gray-400' />
+              <CheckBadgeIcon className='h-6 w-6 text-gray-400' />
+            </BinaryToggle>
           </div>
           <div className='flex gap-2 items-center mt-3'>
             <SelectPage />
