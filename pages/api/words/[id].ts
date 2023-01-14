@@ -13,11 +13,25 @@ export default async function handler(
 ) {
   const id = Number(req.query.id)
 
+  if(req.method === 'POST') {
+    const body = req.body
+    await prisma.word.update({
+      data: {
+        text: body.text,
+        lang: body.lang,
+        rakibu: true
+      },
+      where: {
+        id
+      }
+    })
+  }
   const word = await prisma.word.findUnique({
     where: {
       id
     },
     include: {
+      predictions: true,
       line: {
         include: {
           words: true
@@ -25,6 +39,5 @@ export default async function handler(
       }
     }
   })
-
   res.status(200).json(word)
 }
