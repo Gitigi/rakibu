@@ -1,6 +1,10 @@
-const { prisma } = require('./lib/prisma')
+const { PrismaClient } = require('@prisma/client')
 const fs = require('fs/promises')
 const path = require('path')
+
+const prisma = new PrismaClient({
+  log: ['query'],
+})
 
 function *get_lines(data, page) {
   for(let [section, value] of Object.entries(data['sections'])) {
