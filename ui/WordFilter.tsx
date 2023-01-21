@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useRef, Fragment } from 'react'
-import { ArrowLongLeftIcon, ArrowLongRightIcon, BarsArrowUpIcon, BarsArrowDownIcon, DocumentTextIcon, PhotoIcon, CheckBadgeIcon, QuestionMarkCircleIcon} from '@heroicons/react/20/solid'
+import { BarsArrowUpIcon, BarsArrowDownIcon, DocumentTextIcon, PhotoIcon, CheckBadgeIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid'
 import { Combobox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { Virtuoso } from 'react-virtuoso'
 
-import BinaryToggle from './BinaryToggle'
+import { PillToggle, ButtonToggle} from './ListChoice'
 import { useEffect } from 'react'
 
 function SelectPage({ pages }: any) {
@@ -148,29 +148,25 @@ export default function WordFilter({ pages }: any) {
       <div className='flex-1'>
         <input className='p-2 border-2 rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
       </div>
-      <BinaryToggle keys={['asc', 'desc']} maxSelect={1}>
+      <PillToggle keys={['asc', 'desc']} maxSelect={1}>
         <BarsArrowUpIcon className='h-6 w-6 text-gray-400' />
         <BarsArrowDownIcon className='h-6 w-6 text-gray-400' />
-      </BinaryToggle>
-      <BinaryToggle keys={['text', 'image']}>
+      </PillToggle>
+      <PillToggle keys={['text', 'image']}>
         <DocumentTextIcon className='h-6 w-6 text-gray-400' />
         <PhotoIcon className='h-6 w-6 text-gray-400' />
-      </BinaryToggle>
-      <BinaryToggle keys={['sirakibu', 'rakibu']}>
+      </PillToggle>
+      <PillToggle keys={[false, true]}>
         <QuestionMarkCircleIcon className='h-6 w-6 text-gray-400' />
         <CheckBadgeIcon className='h-6 w-6 text-gray-400' />
-      </BinaryToggle>
+      </PillToggle>
     </div>
     <div className='flex gap-2 items-center mt-3'>
       <SelectPage pages={pages} />
-      <div className="flex-shrink-0 flex flex-row h-12 w-32 items-stretch gap-4 p-1">
-        <p className="flex-1 bg-gray-800 outline rounded-lg outline-offset-2 outline-2 outline-gray-800 flex justify-center items-center text-white">
-          <span>EN</span>
-        </p>
-        <p className="flex-1 outline rounded-lg outline-offset-2 outline-2 outline-gray-800 flex justify-center items-center">
-          <span>AR</span>
-        </p>
-      </div>
+      <ButtonToggle onChoice={(v: any)=>console.log('selected ', v)} maxSelect={1} minSelect={0} keys={[true, false]} value={[true]} className="flex-shrink-0 flex flex-row h-12 w-32 items-stretch gap-4 p-1">
+        <span>EN</span>
+        <span>AR</span>
+      </ButtonToggle>
 
       <div className='flex-1'>
         <Range />
