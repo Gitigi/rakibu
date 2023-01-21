@@ -7,10 +7,7 @@ import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 
 import { RadioGroup } from '@headlessui/react'
 import { Prediction } from "@prisma/client"
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
+import classNames from "@/lib/classNames"
 
 function WordImage({ word }: any) {
   const height = word.bbox[1][1] - word.bbox[0][1]
