@@ -24,7 +24,9 @@ export default async function handler(
     where: {
       text_accuracy: { lte: accuracy},
       page: page,
-      text: searchText,
+      text: {
+        contains: searchText
+      },
       rakibu: rakibu,
       lang: {
         in: language
@@ -40,7 +42,9 @@ export default async function handler(
     where: {
       text_accuracy: { lte: accuracy},
       page: page,
-      text: searchText,
+      text: {
+        contains: searchText
+      },
       rakibu: rakibu,
       lang: {
         in: language
