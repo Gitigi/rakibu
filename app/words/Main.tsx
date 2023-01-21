@@ -4,7 +4,7 @@ import { useState } from "react"
 
 import WordFilter from "@/ui/WordFilter"
 import type { FilterQuery } from "@/ui/WordFilter"
-import LineList from "./LineList"
+import WordList from "./WordList"
 
 export default function Main({ pages }: any) {
   const [filter, setFilter] = useState<FilterQuery>({
@@ -21,7 +21,7 @@ export default function Main({ pages }: any) {
       <WordFilter pages={pages} filter={filter} setFilter={setFilter} />
     </div>
     <div className="flex-1 py-3">
-      <LineList filter={filter} />
+      <WordList filter={filter} />
     </div>
   </>
 }
