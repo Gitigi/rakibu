@@ -9,8 +9,8 @@ import { Virtuoso } from 'react-virtuoso'
 import { PillToggle, ButtonToggle} from './ListChoice'
 import { useEffect } from 'react'
 
-function SelectPage({ pages }: any) {
-  const [selected, setSelected] = useState('')
+function SelectPage({ pages, value, onChange }: any) {
+  const [selected, setSelected] = useState(value || '')
   const [query, setQuery] = useState('')
   const selectedIndex = useRef(0)
   const ref = useRef<any>(null)
@@ -20,11 +20,20 @@ function SelectPage({ pages }: any) {
     selectedIndex.current = index > -1 ? index : 0
   }, [selected, pages])
 
+  useEffect(()=>{
+    setSelected(value)
+  }, [value])
+
   const scrollToView = () => {
     setTimeout(()=>ref.current?.scrollIntoView({
       index: selectedIndex.current,
       behavior: 'auto',
     }), 1)
+  }
+
+  const pageSelected = ( page: string ) => {
+    setSelected(page);
+    onChange(page)
   }
 
   const filteredPages =
@@ -37,7 +46,7 @@ function SelectPage({ pages }: any) {
         )
   return (
     <div className="w-72">
-      <Combobox value={selected} onChange={setSelected}>
+      <Combobox value={selected} onChange={pageSelected}>
         <div className="relative mt-1">
           <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
             <Combobox.Input
@@ -111,25 +120,25 @@ function SelectPage({ pages }: any) {
   )
 }
 
-function Range() {
-  const [ value, setValue ] = useState<number>(100)
+function Range({ value, onChange }: any) {
+  const [ sliderValue, setValue ] = useState<number>(value)
   const timeout = useRef<any>(null)
 
-  const onChange = (e: any) => {
-    setValue(Number(e.target.value))
+  const onSlide = (e: any) => {
+    let v = Number(e.target.value)
+    setValue(()=>{
+      clearTimeout(timeout.current)
+      timeout.current = setTimeout(()=>{
+        onChange(v);
+      }, 500)
+      return v
+    })
   }
-  useEffect(()=>{
-    clearTimeout(timeout.current)
-    timeout.current = setTimeout(()=>{
-      console.log(value)
-    }, 500)
 
-    return () => clearTimeout(timeout.current)
-  }, [value])
   return <div className="relative pt-2 pb-1 px-2 border rounded-xl">
     <label className='absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs font-medium text-gray-900'>Accuracy { value }</label>
     <input
-      value={value}
+      value={sliderValue}
       type="range"
       className="
         w-full
@@ -137,42 +146,74 @@ function Range() {
         p-0
         focus:outline-none focus:ring-0 focus:shadow-none
       "
-      onChange={onChange}
+      onChange={onSlide}
     />
   </div>
 }
 
-export default function WordFilter({ pages }: any) {
+function SearchInput({ onChange, value, ...props }: any) {
+  const [searchValue, setValue] = useState(value || '')
+  const timeout = useRef<any>(null)
+
+  useEffect(()=>{
+    setValue(value)
+  }, [value])
+
+  const textChanged = (e: any) => {
+    let v = e.target.value
+    setValue(()=>{
+      clearTimeout(timeout.current)
+      timeout.current = setTimeout(()=>{
+        onChange(v)
+      }, 500)
+      return v
+    })
+  }
+
+  return <input type='text' {...props} value={searchValue} onChange={textChanged} />
+}
+
+export type FilterQuery = {
+  search: string,
+  order: string,
+  rakibu: boolean | null | undefined
+  page: string,
+  language: string[] | null | undefined
+  accuracy: number
+}
+
+export default function WordFilter({ pages, filter, setFilter }: any) {
+  const updateFilter = (field: string, value: any) => {
+    console.log(`setting ${field} = ${value}`)
+    setFilter((state: FilterQuery) => ({...state, [field]: value}))
+  }
   return <>
     <div className='flex gap-4 items-center'>
       <div className='flex-1'>
-        <input className='p-2 border-2 rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
+        <SearchInput value={filter.search} onChange={updateFilter.bind(null, 'search')} className='p-2 border-2 rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
       </div>
-      <PillToggle keys={['asc', 'desc']} maxSelect={1}>
+      <PillToggle keys={['asc', 'desc']} value={filter.order} onChange={updateFilter.bind(null, 'order')} maxSelect={1}>
         <BarsArrowUpIcon className='h-6 w-6 text-gray-400' />
         <BarsArrowDownIcon className='h-6 w-6 text-gray-400' />
+      </PillToggle>
+      <PillToggle keys={[false, true]} maxSelect={1} value={filter.rakibu} onChange={updateFilter.bind(null, 'rakibu')}>
+        <QuestionMarkCircleIcon className='h-6 w-6 text-gray-400' />
+        <CheckBadgeIcon className='h-6 w-6 text-gray-400' />
       </PillToggle>
       <PillToggle keys={['text', 'image']}>
         <DocumentTextIcon className='h-6 w-6 text-gray-400' />
         <PhotoIcon className='h-6 w-6 text-gray-400' />
       </PillToggle>
-      <PillToggle keys={[false, true]}>
-        <QuestionMarkCircleIcon className='h-6 w-6 text-gray-400' />
-        <CheckBadgeIcon className='h-6 w-6 text-gray-400' />
-      </PillToggle>
     </div>
     <div className='flex gap-2 items-center mt-3'>
-      <SelectPage pages={pages} />
-      <ButtonToggle onChoice={(v: any)=>console.log('selected ', v)} maxSelect={1} minSelect={0} keys={[true, false]} value={[true]} className="flex-shrink-0 flex flex-row h-12 w-32 items-stretch gap-4 p-1">
+      <SelectPage pages={pages} value={filter.page} onChange={updateFilter.bind(null, 'page')} />
+      <ButtonToggle keys={['en', 'ar']} value={filter.language} onChange={updateFilter.bind(null, 'language')} className="flex-shrink-0 flex flex-row h-12 w-32 items-stretch gap-4 p-1">
         <span>EN</span>
         <span>AR</span>
       </ButtonToggle>
-
       <div className='flex-1'>
-        <Range />
+        <Range value={filter.accuracy} onChange={updateFilter.bind(null, 'accuracy')} />
       </div>
-
-
     </div>
   </>
 }

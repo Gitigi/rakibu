@@ -68,7 +68,7 @@ export default function WordPanel({ word }: any) {
   const isMutating = loading || isPending;
 
   return <>
-    <div className="flex-1 flex flex-col p-4 gap-y-2 overflow-scroll">
+    <div className="flex-1 flex flex-col p-4 gap-y-2 overflow-y-scroll">
       <div className="border-2 flex-shrink-0 border-blue-100 rounded-lg self-stretch bg-gray-50 h-12 flex justify-center items-center">
         <Image className="" height={height} width={width} src={`/api/images/${word.page}/${word.section}/${word.line_index}/${word.index}`} alt="word" />
       </div>

@@ -12,7 +12,7 @@ const mapKeyValues = (keyValues: any, size: number, keysRef: any[]) => {
   return values
 }
 
-export default function ListChoice({ className, children, minSelect, maxSelect, keys, onChoice, defaultValue, value }: any) {
+export default function ListChoice({ className, children, minSelect, maxSelect, keys, onChange, defaultValue, value }: any) {
   children = Array.isArray(children) ? children : [children]
   
   const [values, setValues] = useState<boolean[]>(()=>{
@@ -51,9 +51,9 @@ export default function ListChoice({ className, children, minSelect, maxSelect, 
     const newState = calculateState(values, index, minSelect, maxSelect)
     if(validateMax(maxSelect, newState) && validateMin(minSelect, newState)) {
       setValues(newState)
-      if(onChoice) {
+      if(onChange) {
         let mappedValues = newState.map((v, i) => i).filter((v,i) => newState[v]).map((v) => keys && keys.length ? keys[v] : v)
-        onChoice(maxSelect == 1 ? mappedValues[0] : mappedValues)
+        onChange(maxSelect == 1 ? mappedValues[0] : mappedValues)
       }
     }
   }

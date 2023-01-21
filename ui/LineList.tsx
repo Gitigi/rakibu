@@ -33,7 +33,25 @@ function Row({ index, line: value }: any) {
   </Line>
 }
 
-export default function WordList() {
+const getQuery = (filter: any): {[key: string]: any} => {
+  return Object.keys(filter || {}).reduce((acc: any, currentValue: string) => {
+    let v = filter[currentValue]
+    if((v && !Array.isArray(v) || v?.length) || v === false) {
+      acc[currentValue] = v
+    }
+    return acc
+  }, {})
+}
+
+const fetchData = async (startIndex: number, stopIndex: number, filter: any) => {
+  let query: any = {'start': startIndex.toString(), 'stop': stopIndex.toString(), ...getQuery(filter)}
+  query = new URLSearchParams(query)
+  const res = await fetch(`/api/lines?${query.toString()}`)
+  const data = await res.json()
+  return data
+}
+
+export default function LineList({ filter }: any) {
   const ref = useRef<any>(null)
   const paginationRef = useRef<any>(null)
   const [lines, setLines] = useState<any[]>([])
@@ -89,31 +107,25 @@ export default function WordList() {
     setLines([])
     setFirstItemIndex(0)
     setLoading(true)
-    const pageLines = await fetchData(startIndex, stopIndex)
+    const pageLines = await fetchData(startIndex, stopIndex, filter)
     setLoading(false)
     setupPage(pageLines, startIndex, stopIndex)
   }
 
-  const fetchData = async (startIndex: number, stopIndex: number) => {
-    const res = await fetch(`/api/lines?start=${startIndex}&stop=${stopIndex}`)
-    const data = await res.json()
-    return data
-  }
-
-  const loadMore = useCallback( async () => {
+  const loadMore = async () => {
     const startIndex = currentPos.current
     const stopIndex = startIndex + (PAGE_SIZE - 1)
     setLoadingNext(true)
-    const data = await fetchData(startIndex, stopIndex)
+    const data = await fetchData(startIndex, stopIndex, filter)
     currentPos.current = stopIndex + 1
     setLines((lines) => {
       lines = [...lines, ...data['data']]
       return lines
     })
     setLoadingNext(false)
-  }, [setLines])
+  }
 
-  const loadMore2 = useCallback( async () => {
+  const loadMore2 = async () => {
     const usersToPrepend = PAGE_SIZE
     const nextFirstItemIndex = firstItemIndex - usersToPrepend
 
@@ -122,26 +134,27 @@ export default function WordList() {
       return
     }
     setLoading(true)
-    const data = await fetchData(nextFirstItemIndex, firstItemIndex - 1)
+    const data = await fetchData(nextFirstItemIndex, firstItemIndex - 1, filter)
     setFirstItemIndex(nextFirstItemIndex)
     setLines((lines) => [...data['data'], ...lines])
     setLoading(false)
-  }, [setLines, firstItemIndex])
+  }
 
   useEffect(()=>{
     window.document.querySelector('[data-virtuoso-scroller="true"]')?.scrollTo(0, 0)
     let mounted = true
     const { startIndex, stopIndex } = getRange(1)
     setLoading(true)
-    fetchData(startIndex, stopIndex).then(res => {
-      if(mounted)
+    fetchData(startIndex, stopIndex, filter).then(res => {
+      if(mounted) {
         setupPage(res, startIndex, stopIndex)
+      }
     }).finally(()=>setLoading(false))
 
     return () => {
       mounted = false;
     }
-  }, [])
+  }, [filter])
 
   const updatePageNumber = ({startIndex, endIndex}: any) => {
     let page = Math.floor(startIndex / PAGE_SIZE) + 1
