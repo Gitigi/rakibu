@@ -2,7 +2,7 @@
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import prisma from '../../lib/prisma'
+import prisma from '@/lib/prisma'
 
 type Data = {
   data: any[],
@@ -21,10 +21,12 @@ export default async function handler(
   let searchText: any = req.query.search
   let rakibu: any = req.query.rakibu ? req.query.rakibu === 'true' : undefined
   let language: any = req.query.language ? req.query.language.toString().split(',') : undefined
+  let page: any = req.query.page
 
   const lines = await prisma.line.findMany({
     where: {
       accuracy: { lte: accuracy},
+      page: page,
       words: {
         some: {
           text: {
@@ -49,6 +51,7 @@ export default async function handler(
   const total = await prisma.line.count({
     where: {
       accuracy: { lte: accuracy},
+      page: page,
       words: {
         some: {
           text: {

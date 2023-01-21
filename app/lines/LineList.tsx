@@ -17,14 +17,6 @@ const getQuery = (filter: any): {[key: string]: any} => {
   }, {})
 }
 
-const fetchData = async (startIndex: number, stopIndex: number, filter: any) => {
-  let query: any = {'start': startIndex.toString(), 'stop': stopIndex.toString(), ...getQuery(filter)}
-  query = new URLSearchParams(query)
-  const res = await fetch(`/api/lines?${query.toString()}`)
-  const data = await res.json()
-  return data
-}
-
 export default function LineList({ filter }: any) {
   const ref = useRef<any>(null)
   const paginationRef = useRef<any>(null)
@@ -84,6 +76,14 @@ export default function LineList({ filter }: any) {
     const pageLines = await fetchData(startIndex, stopIndex, filter)
     setLoading(false)
     setupPage(pageLines, startIndex, stopIndex)
+  }
+
+  const fetchData = async (startIndex: number, stopIndex: number, filter: any) => {
+    let query: any = {'start': startIndex.toString(), 'stop': stopIndex.toString(), ...getQuery(filter)}
+    query = new URLSearchParams(query)
+    const res = await fetch(`/api/lines?${query.toString()}`)
+    const data = await res.json()
+    return data
   }
 
   const loadMore = async () => {
@@ -148,7 +148,7 @@ export default function LineList({ filter }: any) {
       overscan={200}
       itemContent={(index, line) => {
         return <Line>
-          {line.words.map((word: any) => <Word key={word.index} word={word} baseUrl="/lines/word" />)}
+          {line.words.map((word: any) => <Word key={word.id} word={word} baseUrl="/lines/word" />)}
         </Line>
       }}
       rangeChanged={updatePageNumber}
