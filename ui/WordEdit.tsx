@@ -105,7 +105,7 @@ export default function WordPanel({ word }: any) {
         {word.predictions.map((p: Prediction, index: number) => (
           <button key={index} onClick={()=>setText(p.text)} className={classNames(
             p.text === text ? 'bg-green-400 text-white' : '',
-            "font-amiri text-2xl",
+            "font-amiri text-xl",
             "h-fit px-2 py-1 border-2 border-gray-400 rounded-lg flex justify-center items-center"
             )}
           >
