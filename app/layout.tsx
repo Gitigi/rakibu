@@ -20,9 +20,15 @@ import {
   QueueListIcon
 } from '@heroicons/react/24/outline'
 
+import localFont from '@next/font/local'
+
+const amiri = localFont({
+  src: '../fonts/Amiri/Amiri-Regular.ttf',
+  weight: "400",
+  variable: '--font-amiri'
+})
+
 const navigation = [
-
-
   { name: 'Dashboard', href: '/', icon: HomeIcon, current: true },
   { name: 'Lines', href: '/lines', icon: Bars3CenterLeftIcon, current: false },
   { name: 'Words', href: '/words', icon: QueueListIcon, current: false },
@@ -51,7 +57,7 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className='h-full overflow-hidden'>
+      <body className={`h-full overflow-hidden ${amiri.variable}`}>
         <>
           <div className="flex h-full">
             <Transition.Root show={sidebarOpen} as={Fragment}>

@@ -10,7 +10,10 @@ module.exports = {
     extend: {
       animation: {
         'line-anim': 'line-anim 1s linear infinite',
-      }
+      },
+      fontFamily: {
+        amiri: ['var(--font-amiri)'],
+      },
     },
   },
   plugins: [],

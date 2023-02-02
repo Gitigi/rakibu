@@ -61,7 +61,7 @@ export default function Keyboard({ onKeyClick }: any) {
         <Tab.Panel as="div" className="grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
           {basicKeys.map((key: any, index)=> (
             // <kbd key={index}>{ key[0] ==='\u200c' ? <Image height={30} width={30} src="/img/zwnj.jpg" alt="zero-width non-joiner"/> : key[0] }</kbd>
-            <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer data-[key=enter]:row-span-2 data-[key=space]:col-span-5">
+            <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="font-amiri flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer data-[key=enter]:row-span-2 data-[key=space]:col-span-5">
               { key[0] === String.raw`\n` ? "\u2937" : key[0] === '\u200c' ? zeroWidthSvg : key[0]}
             </kbd>
           ))}
