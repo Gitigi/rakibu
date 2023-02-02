@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useTransition } from "react"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { useRouter, usePathname } from "next/navigation"
 import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 
 import { RadioGroup } from '@headlessui/react'
@@ -11,9 +12,13 @@ import classNames from "@/lib/classNames"
 import WordInput from "./WordInput"
 
 function WordImage({ word }: any) {
+  const path = usePathname()
+  const url = path?.replace(path.substring(path.lastIndexOf('/')), `/${word.id}`) || ""
   const height = word.bbox[1][1] - word.bbox[0][1]
   const width = word.bbox[1][0] - word.bbox[0][0]
-  return <Image className="" height={height} width={width} src={`/api/images/${word.page}/${word.section}/${word.line_index}/${word.index}`} alt="word" />
+  return <Link href={url} className="p-1 rounded-md shadow-gray-300 hover:-translate-y-0.5 hover:shadow-md ">
+    <Image className="" height={height} width={width} src={`/api/images/${word.page}/${word.section}/${word.line_index}/${word.index}`} alt="word" />
+  </Link>
 }
 
 export default function WordPanel({ word }: any) {
