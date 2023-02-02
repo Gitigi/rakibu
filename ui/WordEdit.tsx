@@ -8,6 +8,7 @@ import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
 import { Prediction } from "@prisma/client"
 import classNames from "@/lib/classNames"
+import WordInput from "./WordInput"
 
 function WordImage({ word }: any) {
   const height = word.bbox[1][1] - word.bbox[0][1]
@@ -65,7 +66,7 @@ export default function WordPanel({ word }: any) {
   const isMutating = loading || isPending;
 
   return <>
-    <div className="flex-1 flex flex-col p-4 gap-y-2 overflow-y-scroll">
+    <div className="flex-1 flex flex-col p-2 gap-y-2 overflow-y-scroll">
       <div className="border-2 flex-shrink-0 border-blue-100 rounded-lg self-stretch bg-gray-50 h-12 flex justify-center items-center">
         <Image className="" height={height} width={width} src={`/api/images/${word.page}/${word.section}/${word.line_index}/${word.index}`} alt="word" />
       </div>
@@ -105,7 +106,7 @@ export default function WordPanel({ word }: any) {
             <span>{ p.text }</span>
           </button>)
         )}
-        <input onChange={onManualEntry} value={textManual} type="text" className="mt-2 w-full h-11 rounded-sm px-2 text-lg" placeholder="rakibu" />
+        <WordInput value={textManual} onChange={onManualEntry} />
       </div>
       <div className="bg-white border-2 rounded-lg flex flex-col gap-2">
         <div className="p-2 flex flex-row flex-wrap gap-2 items-center">
