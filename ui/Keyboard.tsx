@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from 'react';
 import { Tab } from '@headlessui/react'
 
 import classNames from "@/lib/classNames";
@@ -11,13 +12,19 @@ const tabs: any[] = [
 ]
 
 export default function Keyboard({ onKeyClick }: any) {
+  const [selectedIndex, setSelectedIndex] = useState<any>(0)
+
+  const selectedTab = (e: any) => {
+    setSelectedIndex(e.target.value)
+  }
+
   const preventFocus = (e: any) => {
     var el: any = document.activeElement
     if( el?.tagName === 'INPUT') {
       setTimeout(()=>el?.focus())
     }
   }
-  return <Tab.Group as="div" className="border border-gray-600 rounded-lg">
+  return <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex} as="div" className="border border-gray-600 rounded-lg">
       <div>
         <div className="sm:hidden">
           <label htmlFor="tabs" className="sr-only">
@@ -27,11 +34,12 @@ export default function Keyboard({ onKeyClick }: any) {
           <select
             id="tabs"
             name="tabs"
-            className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+            className="bg-white text-gray-800 py-2 pl-4 block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
             defaultValue={tabs.find((tab) => tab.current).name}
+            onChange={selectedTab}
           >
-            {tabs.map((tab) => (
-              <option key={tab.name}>{tab.name}</option>
+            {tabs.map((tab, index) => (
+              <option key={tab.name} value={index}>{tab.name}</option>
             ))}
           </select>
         </div>
@@ -58,7 +66,7 @@ export default function Keyboard({ onKeyClick }: any) {
       </div>
 
       <Tab.Panels className="min-h-[160px]">
-        <Tab.Panel as="div" className="grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
+        <Tab.Panel as="div" className="text-gray-800 bg-white grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
           {basicKeys.map((key: any, index)=> (
             // <kbd key={index}>{ key[0] ==='\u200c' ? <Image height={30} width={30} src="/img/zwnj.jpg" alt="zero-width non-joiner"/> : key[0] }</kbd>
             <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="font-amiri flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer data-[key=enter]:row-span-2 data-[key=space]:col-span-5">
@@ -66,7 +74,7 @@ export default function Keyboard({ onKeyClick }: any) {
             </kbd>
           ))}
         </Tab.Panel>
-        <Tab.Panel as="div" className="grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
+        <Tab.Panel as="div" className="text-gray-800 bg-white grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
           {latinAlt.map((key: any, index)=> (
             // <kbd key={index}>{ key[0] ==='\u200c' ? <Image height={30} width={30} src="/img/zwnj.jpg" alt="zero-width non-joiner"/> : key[0] }</kbd>
             <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer data-[key=enter]:row-span-2 data-[key=space]:col-span-5">
@@ -80,7 +88,7 @@ export default function Keyboard({ onKeyClick }: any) {
             </kbd>
           ))}
         </Tab.Panel>
-        <Tab.Panel as="div" className="grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
+        <Tab.Panel as="div" className="text-gray-800 bg-white grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
           {greek.map((key: any, index)=> (
             // <kbd key={index}>{ key[0] ==='\u200c' ? <Image height={30} width={30} src="/img/zwnj.jpg" alt="zero-width non-joiner"/> : key[0] }</kbd>
             <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer">
