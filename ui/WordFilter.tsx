@@ -49,10 +49,10 @@ function SelectPage({ pages, value, onChange, className }: any) {
     <div className={classNames("w-72", className || '')}>
       <Combobox value={selected} onChange={pageSelected} nullable>
         <div className="relative mt-1">
-          <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+          <div className="relative w-full cursor-default overflow-hidden rounded-lg text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
             <Combobox.Input
               placeholder='Select Page'
-              className="w-full border-none py-3 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+              className="w-full border-none py-3 pl-3 pr-10 text-sm leading-5 bg-white text-gray-800 focus:ring-0"
               displayValue={(page: string) => page}
               onChange={(event) => setQuery(event.target.value)}
             />
@@ -71,7 +71,7 @@ function SelectPage({ pages, value, onChange, className }: any) {
             afterLeave={() => setQuery('')}
             afterEnter={scrollToView}
           >
-            <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-hidden rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <Combobox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-hidden rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {filteredPages.length === 0 && query !== '' ? (
                 <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                   Nothing found.

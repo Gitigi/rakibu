@@ -89,8 +89,7 @@ export default function WordPanel({ word }: any) {
               value={lang}
               className={({ active, checked }) =>
                 classNames(
-                  active && checked ? 'bg-gray-800 text-white' : '',
-                  !active && checked ? 'bg-gray-800 text-white' : '',
+                  active || checked ? 'bg-gray-800 text-white' : 'bg-white text-gray-800',
                   'p-2 flex-1 outline rounded-lg outline-offset-2 outline-2 outline-gray-800 flex justify-center items-center'
                 )
               }
