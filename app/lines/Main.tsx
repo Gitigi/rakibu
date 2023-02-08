@@ -20,7 +20,7 @@ export default function Main({ pages }: any) {
   });
 
   return <>
-    <div className='py-4 z-10 border-2 rounded-xl px-2'>
+    <div className='py-4 z-10 border rounded-xl px-2'>
       <WordFilter pages={pages} filter={filter} setFilter={setFilter} usage="lines" />
     </div>
     <div className="flex-1 py-3">

@@ -10,7 +10,7 @@ import RakibuContext from './RakibuContext'
 const LARGE_SCREEN = 1024
 
 export default function Aside({ children }: any) {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [hasSidebar, setHasSidebar] = useState(false)
   const segments = useSelectedLayoutSegments();
   const isOpen = useRef<any>(open)
@@ -19,7 +19,7 @@ export default function Aside({ children }: any) {
   rakibuContext.current['setOpen'] = setOpen;
 
   useEffect(()=>{
-    if(!isOpen.current) {
+    if(!isOpen.current && segments?.length) {
       setOpen(true)
       isOpen.current = true
     }
@@ -31,7 +31,6 @@ export default function Aside({ children }: any) {
 
   useEffect(()=>{
     window.addEventListener("resize", function(event) {
-      console.log(window.document.body.clientWidth + ' wide by ' + document.body.clientHeight+' high');
       setHasSidebar(document.body.clientWidth < LARGE_SCREEN)
     })
     setHasSidebar(window.document.body.clientWidth < LARGE_SCREEN)

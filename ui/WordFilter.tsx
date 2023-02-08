@@ -10,7 +10,7 @@ import { PillToggle, ButtonToggle} from './ListChoice'
 import { useEffect } from 'react'
 import classNames from '@/lib/classNames'
 
-function SelectPage({ pages, value, onChange }: any) {
+function SelectPage({ pages, value, onChange, className }: any) {
   const [selected, setSelected] = useState(value || '')
   const [query, setQuery] = useState('')
   const selectedIndex = useRef(0)
@@ -46,7 +46,7 @@ function SelectPage({ pages, value, onChange }: any) {
             .includes(query.toLowerCase().replace(/\s+/g, ''))
         )
   return (
-    <div className="w-72">
+    <div className={classNames("w-72", className || '')}>
       <Combobox value={selected} onChange={pageSelected} nullable>
         <div className="relative mt-1">
           <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
@@ -225,9 +225,9 @@ export default function WordFilter({ pages, filter, setFilter, usage }: any) {
     setFilter((state: FilterQuery) => ({...state, [field]: value}))
   }
   return <>
-    <div className='flex gap-4 items-center'>
-      <div className='flex-1'>
-        <SearchInput value={filter.search} usage={usage} onChange={updateFilter} className='p-2 border-2 rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
+    <div className='flex flex-wrap gap-4 items-center w-full'>
+      <div className='flex-shrink-0 w-full md:flex-1 md:w-auto'>
+        <SearchInput value={filter.search} usage={usage} onChange={updateFilter} className='p-2 border rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
       </div>
       <PillToggle keys={['asc', 'desc']} value={filter.order} onChange={updateFilter.bind(null, 'order')} maxSelect={1}>
         <BarsArrowUpIcon className='h-6 w-6 text-gray-400' />
@@ -242,13 +242,13 @@ export default function WordFilter({ pages, filter, setFilter, usage }: any) {
         <PhotoIcon className='h-6 w-6 text-gray-400' />
       </PillToggle>
     </div>
-    <div className='flex gap-2 items-center mt-3'>
-      <SelectPage pages={pages} value={filter.page} onChange={updateFilter.bind(null, 'page')} />
+    <div className='flex flex-wrap gap-2 items-center mt-3'>
+      <SelectPage className="flex-1" pages={pages} value={filter.page} onChange={updateFilter.bind(null, 'page')} />
       <ButtonToggle keys={['en', 'ar']} value={filter.language} onChange={updateFilter.bind(null, 'language')} className="flex-shrink-0 flex flex-row h-12 w-32 items-stretch gap-4 p-1">
         <span>EN</span>
         <span>AR</span>
       </ButtonToggle>
-      <div className='flex-1'>
+      <div className='flex-shrink-0 w-full mt-3 md:flex-1 md:w-auto md:mt-auto'>
         <Range value={filter.accuracy} onChange={updateFilter.bind(null, 'accuracy')} />
       </div>
     </div>
