@@ -1,7 +1,6 @@
 "use client"
 
 import { Fragment, useContext, useEffect, useState, useRef } from 'react'
-import { useSelectedLayoutSegments } from 'next/navigation'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
@@ -12,22 +11,9 @@ const LARGE_SCREEN = 1024
 export default function Aside({ children }: any) {
   const [open, setOpen] = useState(false)
   const [hasSidebar, setHasSidebar] = useState(false)
-  const segments = useSelectedLayoutSegments();
-  const isOpen = useRef<any>(open)
   const rakibuContext = useContext(RakibuContext)
 
   rakibuContext.current['setOpen'] = setOpen;
-
-  useEffect(()=>{
-    if(!isOpen.current && segments?.length) {
-      setOpen(true)
-      isOpen.current = true
-    }
-  }, [segments])
-
-  useEffect(()=>{
-    isOpen.current = open
-  }, [open])
 
   useEffect(()=>{
     window.addEventListener("resize", function(event) {
