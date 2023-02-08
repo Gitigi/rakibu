@@ -38,6 +38,7 @@ export default function WordList({ filter }: any) {
   const [pages, setPages] = useState<number[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [loadingNext, setLoadingNext] = useState<boolean>(false)
+  const endReached = useRef<boolean>(false)
 
   const PAGE_SIZE = 20
   const SKIP_SIZE = 500
@@ -103,6 +104,8 @@ export default function WordList({ filter }: any) {
   }
 
   const loadMore = async () => {
+    if(endReached.current) return
+    
     const startIndex = currentPos.current
     const stopIndex = startIndex + (PAGE_SIZE - 1)
     setLoadingNext(true)
@@ -113,6 +116,10 @@ export default function WordList({ filter }: any) {
       return lines
     })
     setLoadingNext(false)
+
+    if(!data['data'].length) {
+      endReached.current = true
+    }
   }
 
   const loadMore2 = async () => {
