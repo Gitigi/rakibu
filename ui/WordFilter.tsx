@@ -8,6 +8,7 @@ import { Virtuoso } from 'react-virtuoso'
 
 import { PillToggle, ButtonToggle} from './ListChoice'
 import { useEffect } from 'react'
+import classNames from '@/lib/classNames'
 
 function SelectPage({ pages, value, onChange }: any) {
   const [selected, setSelected] = useState(value || '')
@@ -151,8 +152,9 @@ function Range({ value, onChange }: any) {
   </div>
 }
 
-function SearchInput({ onChange, value, ...props }: any) {
+function SearchInput({ onChange, value, usage, ...props }: any) {
   const [searchValue, setValue] = useState(value || '')
+  const [mode, setMode] = useState<any>({modeSensitive: false, modeWord: false, modeRegex: false})
   const timeout = useRef<any>(null)
 
   useEffect(()=>{
@@ -164,13 +166,46 @@ function SearchInput({ onChange, value, ...props }: any) {
     setValue(()=>{
       clearTimeout(timeout.current)
       timeout.current = setTimeout(()=>{
-        onChange(v)
+        try{
+          // validate regex before calling onChange
+          if(mode['modeRegex']) new RegExp(v)
+          onChange('search', v)
+        } catch(e) {}
       }, 500)
       return v
     })
   }
 
-  return <input type='text' {...props} value={searchValue} onChange={textChanged} />
+  const toggleMode = (md: string) => {
+    setMode((mode: any) => {
+      mode = {...mode, [md]: !mode[md]}
+      setTimeout(()=>{
+        onChange(md, mode[md])
+      })
+      return mode
+    })
+  }
+
+  return <div className='relative'>
+    <input type='text' {...props} value={searchValue} onChange={textChanged} />
+    {usage === 'words' ? <div className='absolute inset-y-0 right-0 flex py-1.5 pr-1.5 gap-1'>
+      <span onClick={toggleMode.bind(null, 'modeSensitive')} className={classNames(
+        'p-1 border  rounded-lg text-gray-600 text-lg flex items-center w-8 h-8 justify-center cursor-pointer',
+        mode.modeSensitive ? 'border-blue-300 text-blue-600' : 'border-gray-300 text-gray-600'
+        )}
+      >Cc</span>
+      <span onClick={toggleMode.bind(null, 'modeWord')} className={classNames(
+        'p-1 border  rounded-lg text-gray-600 text-lg flex items-center w-8 h-8 justify-center cursor-pointer',
+        mode.modeWord ? 'border-blue-300 text-blue-600' : 'border-gray-300 text-gray-600'
+        )}
+      >W</span>
+      <span onClick={toggleMode.bind(null, 'modeRegex')} className={classNames(
+        'p-1 border  rounded-lg text-gray-600 text-lg flex items-center w-8 h-8 justify-center cursor-pointer',
+        mode.modeRegex ? 'border-blue-300 text-blue-600' : 'border-gray-300 text-gray-600'
+        )}
+      >.*</span>
+    </div> : null}
+  </div>
 }
 
 export type FilterQuery = {
@@ -179,18 +214,20 @@ export type FilterQuery = {
   rakibu: boolean | null | undefined
   page: string,
   language: string[] | null | undefined
-  accuracy: number
+  accuracy: number,
+  modeSensitive: boolean,
+  modeWord: boolean,
+  modeRegex: boolean
 }
 
-export default function WordFilter({ pages, filter, setFilter }: any) {
+export default function WordFilter({ pages, filter, setFilter, usage }: any) {
   const updateFilter = (field: string, value: any) => {
-    console.log(`setting ${field} = ${value}`)
     setFilter((state: FilterQuery) => ({...state, [field]: value}))
   }
   return <>
     <div className='flex gap-4 items-center'>
       <div className='flex-1'>
-        <SearchInput value={filter.search} onChange={updateFilter.bind(null, 'search')} className='p-2 border-2 rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
+        <SearchInput value={filter.search} usage={usage} onChange={updateFilter} className='p-2 border-2 rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
       </div>
       <PillToggle keys={['asc', 'desc']} value={filter.order} onChange={updateFilter.bind(null, 'order')} maxSelect={1}>
         <BarsArrowUpIcon className='h-6 w-6 text-gray-400' />
