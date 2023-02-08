@@ -61,7 +61,7 @@ export default function RootLayout({
         <>
           <div className="flex h-full">
             <Transition.Root show={sidebarOpen} as={Fragment}>
-              <Dialog as="div" className="relative z-40 lg:hidden" onClose={setSidebarOpen}>
+              <Dialog as="div" className="relative z-40 xl:hidden" onClose={setSidebarOpen}>
                 <Transition.Child
                   as={Fragment}
                   enter="transition-opacity ease-linear duration-300"
@@ -168,7 +168,7 @@ export default function RootLayout({
             </Transition.Root>
 
             {/* Static sidebar for desktop */}
-            <div className="hidden lg:flex lg:flex-shrink-0">
+            <div className="hidden xl:flex xl:flex-shrink-0">
               <div className="flex w-64 flex-col">
                 {/* Sidebar component, swap this element with another sidebar if you like */}
                 <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-gray-800">
@@ -227,7 +227,7 @@ export default function RootLayout({
               </div>
             </div>
             <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-              <div className="lg:hidden">
+              <div className="xl:hidden">
                 <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-1.5">
                   <div>
                     <img
