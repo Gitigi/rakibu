@@ -30,7 +30,7 @@ export default function WordInput( {value, onChange }: any) {
 
   return <div className="relative w-full mt-1">
     <Disclosure>
-      <div className='relative'>
+      <div className='relative bg-white text-gray-800'>
         <input
           ref={ref}
           onChange={onChange}

@@ -104,7 +104,7 @@ export default function WordPanel({ word }: any) {
       <div className="bg-gray-100 p-2 rounded-lg flex flex-row flex-wrap gap-2">
         {word.predictions.map((p: Prediction, index: number) => (
           <button key={index} onClick={()=>setText(p.text)} className={classNames(
-            p.text === text ? 'bg-green-400 text-white' : '',
+            p.text === text ? 'bg-green-400 text-white' : 'bg-white text-gray-800',
             "font-amiri text-xl",
             "h-fit px-2 py-1 border-2 border-gray-400 rounded-lg flex justify-center items-center"
             )}

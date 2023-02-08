@@ -101,7 +101,7 @@ export function ButtonToggle({ children, ...props }: any) {
   return <ListChoice {...props} className="flex-shrink-0 flex flex-row h-12 w-32 items-stretch gap-4 p-1">
     {(active: boolean, choiceClick: (index: number)=>null) => <button
       className={classNames(
-        active ? "bg-gray-800 text-white" : "",
+        active ? "bg-gray-800 text-white" : "bg-white text-gray-800",
         "flex-1 outline rounded-lg outline-offset-2 outline-2 outline-gray-800 flex justify-center items-center"
       )}
       onClick={choiceClick.bind(null, 0)}
@@ -110,7 +110,7 @@ export function ButtonToggle({ children, ...props }: any) {
     </button>}
     {(active: boolean, choiceClick: (index: number)=>null) => <button
       className={classNames(
-        active ? "bg-gray-800 text-white" : "",
+        active ? "bg-gray-800 text-white" : "bg-white text-gray-800",
         "flex-1 outline rounded-lg outline-offset-2 outline-2 outline-gray-800 flex justify-center items-center"
       )}
       onClick={choiceClick.bind(null, 1)}

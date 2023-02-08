@@ -227,7 +227,7 @@ export default function WordFilter({ pages, filter, setFilter, usage }: any) {
   return <>
     <div className='flex flex-wrap gap-4 items-center w-full'>
       <div className='flex-shrink-0 w-full md:flex-1 md:w-auto'>
-        <SearchInput value={filter.search} usage={usage} onChange={updateFilter} className='p-2 border rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
+        <SearchInput value={filter.search} usage={usage} onChange={updateFilter} className='bg-white text-gray-800 p-2 border rounded-lg border-gray-400 w-full focus-within:outline-none focus:outline-none' placeholder='Search' type='text' />
       </div>
       <PillToggle keys={['asc', 'desc']} value={filter.order} onChange={updateFilter.bind(null, 'order')} maxSelect={1}>
         <BarsArrowUpIcon className='h-6 w-6 text-gray-400' />
@@ -243,7 +243,7 @@ export default function WordFilter({ pages, filter, setFilter, usage }: any) {
       </PillToggle>
     </div>
     <div className='flex flex-wrap gap-2 items-center mt-3'>
-      <SelectPage className="flex-1" pages={pages} value={filter.page} onChange={updateFilter.bind(null, 'page')} />
+      <SelectPage className="bg-white text-gray-800 flex-1" pages={pages} value={filter.page} onChange={updateFilter.bind(null, 'page')} />
       <ButtonToggle keys={['en', 'ar']} value={filter.language} onChange={updateFilter.bind(null, 'language')} className="flex-shrink-0 flex flex-row h-12 w-32 items-stretch gap-4 p-1">
         <span>EN</span>
         <span>AR</span>
