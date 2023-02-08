@@ -103,7 +103,7 @@ export default function WordList({ filter }: any) {
     return data
   }
 
-  const loadMore = async () => {
+  const loadNext = async () => {
     if(endReached.current) return
     
     const startIndex = currentPos.current
@@ -122,7 +122,7 @@ export default function WordList({ filter }: any) {
     }
   }
 
-  const loadMore2 = async () => {
+  const loadPrev = async () => {
     const usersToPrepend = PAGE_SIZE
     const nextFirstItemIndex = firstItemIndex - usersToPrepend
 
@@ -166,8 +166,8 @@ export default function WordList({ filter }: any) {
         firstItemIndex={firstItemIndex}
         initialTopMostItemIndex={0}
         data={lines}
-        startReached={loadMore2}
-        endReached={loadMore}
+        startReached={loadPrev}
+        endReached={loadNext}
         overscan={200}
         itemContent={(index, line) => {
           return <Line>
