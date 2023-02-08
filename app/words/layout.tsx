@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import Main from './Main'
+import Aside from '@/ui/Aside'
 
 export default async function Layout({ children }: any) {
   const pages = (await prisma.$queryRaw<[{page: string}]>`select distinct page as page from line order by page asc;`).map(v => v['page'])
@@ -11,15 +12,7 @@ export default async function Layout({ children }: any) {
         <Main pages={pages} />
         {/* End main area */}
       </main>
-      <aside className="relative hidden w-96 flex-shrink-0 overflow-y-auto border-l border-gray-200 lg:flex lg:flex-col">
-        {/* Start secondary column (hidden on smaller screens) */}
-        <div className="absolute inset-0 py-3 px-4 xl:px-8">
-          <div className="h-full rounded-lg border-2 border-solid border-gray-200 overflow-y-hidden">
-            {children}
-          </div>
-        </div>
-        {/* End secondary column */}
-      </aside>
+      <Aside> { children }</Aside>
     </>
   )
 }

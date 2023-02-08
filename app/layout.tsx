@@ -2,7 +2,7 @@
 
 import './globals.css'
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState, createContext, useRef } from 'react'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation';
 
@@ -21,6 +21,8 @@ import {
 } from '@heroicons/react/24/outline'
 
 import localFont from '@next/font/local'
+
+import RakibuContext from '@/ui/RakibuContext';
 
 const amiri = localFont({
   src: '../fonts/Amiri/Amiri-Regular.ttf',
@@ -49,6 +51,7 @@ export default function RootLayout({
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = useSelectedLayoutSegment() || ''
+  const rakibuContextValue = useRef<any>({})
 
   return (
     <html lang="en" className='h-full bg-gray-50'>
@@ -58,7 +61,7 @@ export default function RootLayout({
       */}
       <head />
       <body className={`h-full overflow-hidden ${amiri.variable}`}>
-        <>
+        <RakibuContext.Provider value={rakibuContextValue} >
           <div className="flex h-full">
             <Transition.Root show={sidebarOpen} as={Fragment}>
               <Dialog as="div" className="relative z-40 xl:hidden" onClose={setSidebarOpen}>
@@ -253,7 +256,7 @@ export default function RootLayout({
               </div>
             </div>
           </div>
-        </>
+        </RakibuContext.Provider>
       </body>
     </html>
   )
