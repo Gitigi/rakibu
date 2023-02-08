@@ -6,6 +6,12 @@ import prisma from '@/lib/prisma'
 
 sharp.cache({items: 400, memory: 200})
 
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
