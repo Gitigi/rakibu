@@ -4,8 +4,8 @@ import './globals.css'
 
 import { Fragment, useState, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useSelectedLayoutSegment } from 'next/navigation';
-
 import { Dialog, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -18,7 +18,6 @@ import {
   Bars3CenterLeftIcon,
   QueueListIcon
 } from '@heroicons/react/24/outline'
-
 import localFont from '@next/font/local'
 
 import RakibuContext from '@/ui/RakibuContext';
@@ -109,6 +108,7 @@ export default function RootLayout({
                       </Transition.Child>
                       <div className="h-0 flex-1 overflow-y-auto pt-5 pb-4">
                         <div className="flex flex-shrink-0 items-center px-4">
+                          {/* eslint-disable-next-line @next/next/no-img-element*/}
                           <img
                             className="h-8 w-auto"
                             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
@@ -145,7 +145,7 @@ export default function RootLayout({
                         <a href="#" className="group block flex-shrink-0">
                           <div className="flex items-center">
                             <div>
-                              <img
+                              <Image height={40} width={40}
                                 className="inline-block h-10 w-10 rounded-full"
                                 src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80"
                                 alt=""
@@ -176,6 +176,7 @@ export default function RootLayout({
                 <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-gray-800">
                   <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
                     <div className="flex flex-shrink-0 items-center px-4">
+                      {/* eslint-disable-next-line @next/next/no-img-element*/}
                       <img
                         className="h-8 w-auto"
                         src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
@@ -212,7 +213,7 @@ export default function RootLayout({
                     <a href="#" className="group block w-full flex-shrink-0">
                       <div className="flex items-center">
                         <div>
-                          <img
+                          <Image width={36} height={36}
                             className="inline-block h-9 w-9 rounded-full"
                             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                             alt=""
@@ -240,6 +241,7 @@ export default function RootLayout({
                       <span className="sr-only">Open sidebar</span>
                       <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                     </button>
+                    {/* eslint-disable-next-line @next/next/no-img-element*/}
                     <img
                       className="h-8 w-auto"
                       src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
