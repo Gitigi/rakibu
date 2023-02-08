@@ -58,6 +58,7 @@ export default function WordList({ filter }: any) {
     setLines(lines['data'])
     let p = Array(Math.ceil(lines['total'] / PAGE_SIZE)).fill(1).map((_, index)=>index+1)
     setPages(p)
+    endReached.current = false
   }
 
   const onGotoPage = async (e: any) => {
