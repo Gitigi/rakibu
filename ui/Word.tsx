@@ -13,6 +13,16 @@ export default function Word({ word, baseUrl }: any) {
   let [ currentWord ] = useRakibu<any>('currentWord')
   let [ openWordEdit ] = useRakibu<any>('openWordEdit')
 
+  const _word = word
+
+  useEffect(()=>{
+    if(currentWord?.id === _word.id) {
+      _word.text = currentWord.text
+      _word.lang = currentWord.lang
+      _word.rakibu = currentWord.rakibu
+    }
+  }, [currentWord, _word])
+
   word = currentWord?.id == word.id ? currentWord : word
 
   const height = word.bbox[1][1] - word.bbox[0][1]
