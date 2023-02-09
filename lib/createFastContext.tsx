@@ -6,7 +6,8 @@ import React, {
   useSyncExternalStore,
 } from "react";
 
-import {get as lodashGet, set as lodashSet} from "lodash"
+import lodashGet from "lodash/get"
+import lodashSet from "lodash/set"
 
 export default function createFastContext<Store>(initialState: Store) {
   function useStoreData(): {
