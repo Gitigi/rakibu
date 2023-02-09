@@ -10,6 +10,7 @@ import { RadioGroup } from '@headlessui/react'
 import { Prediction } from "@prisma/client"
 import classNames from "@/lib/classNames"
 import WordInput from "./WordInput"
+import { useRakibu } from "./RakibuContext"
 
 function WordImage({ word }: any) {
   const path = usePathname()
@@ -29,6 +30,7 @@ export default function WordPanel({ word }: any) {
   const [loading, setLoading] = useState<boolean>(false)
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const [currentWord, setCurrentWord] = useRakibu( v => v['currentWord'])
   const languages = ['en', 'ar']
 
   const height = word.bbox[1][1] - word.bbox[0][1]
@@ -42,6 +44,10 @@ export default function WordPanel({ word }: any) {
   useEffect(() => {
     setEdited((language !== word.lang) || (text !== word.text))
   }, [text, language, word.lang, word.text])
+
+  useEffect(() => {
+    setCurrentWord({'currentWord': {...word, text, lang: language}})
+  }, [word, text, language, setCurrentWord])
 
   const save = async () => {
     setLoading(true)

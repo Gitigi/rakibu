@@ -61,9 +61,6 @@ export default function RootLayout({
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = useSelectedLayoutSegment() || ''
-  const rakibuContextValue = useRef<any>({
-    wordDisplay: {text: true, image: false}
-  })
 
   return (
     <html lang="en" className='h-full bg-gray-50'>
