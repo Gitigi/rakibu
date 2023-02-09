@@ -59,9 +59,9 @@ export default function createFastContext<Store>(initialState: Store) {
       throw new Error("Store not found");
     }
 
-    const selectFunction = useCallback(()=>{
-      return lodashGet(store.get(), selector)
-    }, [store, selector])
+    const selectFunction = useCallback((store: Store)=>{
+      return lodashGet(store, selector)
+    }, [selector])
 
     const setFunction = useCallback((v: any)=> {
       store.set(lodashSet({}, selector, v))
@@ -69,7 +69,8 @@ export default function createFastContext<Store>(initialState: Store) {
 
     const state = useSyncExternalStore(
       store.subscribe,
-      selectFunction
+      () => selectFunction(store.get()),
+      () => selectFunction(initialState)
     );
 
     return [state, setFunction];
