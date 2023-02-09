@@ -2,7 +2,7 @@
 
 import './globals.css'
 
-import { Fragment, useState, useRef } from 'react'
+import { Fragment, useState, useRef, useContext } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSelectedLayoutSegment } from 'next/navigation';
@@ -20,7 +20,7 @@ import {
 } from '@heroicons/react/24/outline'
 import localFont from '@next/font/local'
 
-import RakibuContext from '@/ui/RakibuContext';
+import {RakibuProvider, RakibuContext} from '@/ui/RakibuContext';
 
 const amiri = localFont({
   src: '../fonts/Amiri/Amiri-Regular.ttf',
@@ -41,6 +41,18 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
+function ShowWordEditButton() {
+  const { store } = useContext<any>(RakibuContext)
+  return <button
+    type="button"
+    className="inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900"
+    onClick={() => store.current.setOpen(true)}
+  >
+    <span className="sr-only">Open sidebar</span>
+    <PencilSquareIcon className="h-6 w-6" aria-hidden="true" />
+  </button>
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -49,7 +61,9 @@ export default function RootLayout({
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = useSelectedLayoutSegment() || ''
-  const rakibuContextValue = useRef<any>({})
+  const rakibuContextValue = useRef<any>({
+    wordDisplay: {text: true, image: false}
+  })
 
   return (
     <html lang="en" className='h-full bg-gray-50'>
@@ -59,7 +73,7 @@ export default function RootLayout({
       */}
       <head />
       <body className={`h-full overflow-hidden ${amiri.variable}`}>
-        <RakibuContext.Provider value={rakibuContextValue} >
+        <RakibuProvider >
           <div className="flex h-full">
             <Transition.Root show={sidebarOpen} as={Fragment}>
               <Dialog as="div" className="relative z-40 xl:hidden" onClose={setSidebarOpen}>
@@ -249,14 +263,7 @@ export default function RootLayout({
                     />
                   </div>
                   <div>
-                    <button
-                      type="button"
-                      className="inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900"
-                      onClick={() => rakibuContextValue.current.setOpen(true)}
-                    >
-                      <span className="sr-only">Open sidebar</span>
-                      <PencilSquareIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
+                    <ShowWordEditButton />
                   </div>
                 </div>
               </div>
@@ -265,7 +272,7 @@ export default function RootLayout({
               </div>
             </div>
           </div>
-        </RakibuContext.Provider>
+        </RakibuProvider>
       </body>
     </html>
   )

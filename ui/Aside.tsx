@@ -11,7 +11,7 @@ const LARGE_SCREEN = 1024
 export default function Aside({ children }: any) {
   const [open, setOpen] = useState(false)
   const [hasSidebar, setHasSidebar] = useState(false)
-  const rakibuContext = useContext(RakibuContext)
+  const { store: rakibuContext } = useContext<any>(RakibuContext)
 
   rakibuContext.current['setOpen'] = setOpen;
 

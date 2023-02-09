@@ -9,6 +9,7 @@ import { Virtuoso } from 'react-virtuoso'
 import { PillToggle, ButtonToggle} from './ListChoice'
 import { useEffect } from 'react'
 import classNames from '@/lib/classNames'
+import { useRakibu } from './RakibuContext'
 
 function SelectPage({ pages, value, onChange, className }: any) {
   const [selected, setSelected] = useState(value || '')
@@ -221,6 +222,14 @@ export type FilterQuery = {
 }
 
 export default function WordFilter({ pages, filter, setFilter, usage }: any) {
+
+  let [wordDisplay, setWordDisplay] = useRakibu((v)=>v['wordDisplay'])
+  wordDisplay = Object.entries(wordDisplay).filter(v => v[1]).map(v => v[0])
+
+  const onDisplayChange = (e: string[]) => {
+    setWordDisplay({'wordDisplay': Object.fromEntries(e.map(v => [v, true]))})
+  }
+
   const updateFilter = (field: string, value: any) => {
     setFilter((state: FilterQuery) => ({...state, [field]: value}))
   }
@@ -237,7 +246,7 @@ export default function WordFilter({ pages, filter, setFilter, usage }: any) {
         <QuestionMarkCircleIcon className='h-6 w-6 text-gray-400' />
         <CheckBadgeIcon className='h-6 w-6 text-gray-400' />
       </PillToggle>
-      <PillToggle keys={['text', 'image']}>
+      <PillToggle keys={['text', 'image']} value={wordDisplay} onChange={onDisplayChange}>
         <DocumentTextIcon className='h-6 w-6 text-gray-400' />
         <PhotoIcon className='h-6 w-6 text-gray-400' />
       </PillToggle>
