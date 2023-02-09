@@ -6,6 +6,8 @@ import React, {
   useSyncExternalStore,
 } from "react";
 
+import {get as lodashGet, set as lodashSet} from "lodash"
+
 export default function createFastContext<Store>(initialState: Store) {
   function useStoreData(): {
     get: () => Store;
@@ -50,20 +52,27 @@ export default function createFastContext<Store>(initialState: Store) {
   }
 
   function useStore<SelectorOutput>(
-    selector: (store: Store) => SelectorOutput
-  ): [SelectorOutput, (value: Partial<Store>) => void] {
+    selector: string
+  ): [SelectorOutput, (value: Partial<Store> | null) => void] {
     const store = useContext(StoreContext);
     if (!store) {
       throw new Error("Store not found");
     }
 
+    const selectFunction = useCallback(()=>{
+      return lodashGet(store.get(), selector)
+    }, [store, selector])
+
+    const setFunction = useCallback((v: any)=> {
+      store.set(lodashSet({}, selector, v))
+    }, [store, selector])
+
     const state = useSyncExternalStore(
       store.subscribe,
-      () => selector(store.get()),
-      () => selector(initialState),
+      selectFunction
     );
 
-    return [state, store.set];
+    return [state, setFunction];
   }
 
   return {

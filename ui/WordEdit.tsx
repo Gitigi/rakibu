@@ -30,7 +30,7 @@ export default function WordPanel({ word }: any) {
   const [loading, setLoading] = useState<boolean>(false)
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
-  const [currentWord, setCurrentWord] = useRakibu( v => v['currentWord'])
+  const [currentWord, setCurrentWord] = useRakibu('currentWord')
   const languages = ['en', 'ar']
 
   const height = word.bbox[1][1] - word.bbox[0][1]
@@ -46,7 +46,7 @@ export default function WordPanel({ word }: any) {
   }, [text, language, word.lang, word.text])
 
   useEffect(() => {
-    setCurrentWord({'currentWord': {...word, text, lang: language}})
+    setCurrentWord({...word, text, lang: language})
   }, [word, text, language, setCurrentWord])
 
   const save = async () => {

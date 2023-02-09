@@ -2,7 +2,7 @@
 
 import './globals.css'
 
-import { Fragment, useState, useRef, useContext } from 'react'
+import { Fragment, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSelectedLayoutSegment } from 'next/navigation';
@@ -20,7 +20,7 @@ import {
 } from '@heroicons/react/24/outline'
 import localFont from '@next/font/local'
 
-import {RakibuProvider, RakibuContext} from '@/ui/RakibuContext';
+import {RakibuProvider, useRakibu} from '@/ui/RakibuContext';
 
 const amiri = localFont({
   src: '../fonts/Amiri/Amiri-Regular.ttf',
@@ -42,11 +42,11 @@ function classNames(...classes: string[]) {
 }
 
 function ShowWordEditButton() {
-  const { store } = useContext<any>(RakibuContext)
+  const [ openWordEdit ] = useRakibu<any>('openWordEdit')
   return <button
     type="button"
     className="inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900"
-    onClick={() => store.current.setOpen(true)}
+    onClick={() => openWordEdit(true)}
   >
     <span className="sr-only">Open sidebar</span>
     <PencilSquareIcon className="h-6 w-6" aria-hidden="true" />

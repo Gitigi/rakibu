@@ -6,7 +6,8 @@ import createFastContext from "@/lib/createFastContext";
 
 export const { Provider: RakibuProvider, useStore: useRakibu, Context: RakibuContext } = createFastContext<any>({
   wordDisplay: {text: true, image: false},
-  currentWord: {}
+  currentWord: {},
+  openWordEdit: null
 })
 
 export default RakibuContext;

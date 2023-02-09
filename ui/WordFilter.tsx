@@ -223,11 +223,11 @@ export type FilterQuery = {
 
 export default function WordFilter({ pages, filter, setFilter, usage }: any) {
 
-  let [wordDisplay, setWordDisplay] = useRakibu((v)=>v['wordDisplay'])
+  let [wordDisplay, setWordDisplay] = useRakibu<any>('wordDisplay')
   wordDisplay = Object.entries(wordDisplay).filter(v => v[1]).map(v => v[0])
 
   const onDisplayChange = (e: string[]) => {
-    setWordDisplay({'wordDisplay': Object.fromEntries(e.map(v => [v, true]))})
+    setWordDisplay(Object.fromEntries(e.map(v => [v, true])))
   }
 
   const updateFilter = (field: string, value: any) => {

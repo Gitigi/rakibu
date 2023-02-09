@@ -4,16 +4,18 @@ import { Fragment, useContext, useEffect, useState, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
-import RakibuContext from './RakibuContext'
+import { useRakibu } from './RakibuContext'
 
 const LARGE_SCREEN = 1024
 
 export default function Aside({ children }: any) {
   const [open, setOpen] = useState(false)
   const [hasSidebar, setHasSidebar] = useState(false)
-  const { store: rakibuContext } = useContext<any>(RakibuContext)
+  const [ openWordEdit, setOpenWordEdit ] = useRakibu<any>('openWordEdit')
 
-  rakibuContext.current['setOpen'] = setOpen;
+  useEffect(()=>{
+    setOpenWordEdit(setOpen)
+  }, [setOpen, setOpenWordEdit])
 
   useEffect(()=>{
     window.addEventListener("resize", function(event) {
