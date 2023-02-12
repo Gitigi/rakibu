@@ -160,9 +160,9 @@ var basicKeys = [
   ["ز", ""],
   ["ظ", ""],
   ["ـ", "taṭwīl (kashīda)"],                                // Row 4
-  ['،', "Arabic comma"],
-  [':', "colon"],
-  ['؛', "Arabic semicolon"],
+  ['آ', "alif madda"],
+  ['أ', "alif with hamza on top"],
+  ['إ', "alif with hamza below"],
   [" ", "space"],
   ['\u200c', "zero-width non-joiner (فاصلهٔ مجازی)"],
   ['؟', "Arabic question mark"],
@@ -179,10 +179,10 @@ var additionalKeys = [
   [circle+'\u064f', "ḍamma"],
   [circle+'\u0650',"kasra"],
   [circle+'\u0651', "shadda"],
-  ['آ', "alif madda"],
+  ['،', "Arabic comma"],
   ['ٱ', "alif waṣla"],
-  ['أ', "alif with hamza on top"],
-  ['إ', "alif with hamza below"],                           // Row 6
+  [':', "colon"],
+  ['؛', "Arabic semicolon"],                           // Row 6
 ];
 var palaeoKeys = [
   [circle+'\u06e1',"Quranic sukūn"],
