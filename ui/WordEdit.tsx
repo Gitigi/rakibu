@@ -24,7 +24,7 @@ function WordImage({ word }: any) {
 
 export default function WordPanel({ word }: any) {
   const [text, setText] = useState<string>(word.text)
-  const [textManual, setManualText] = useState<string>('')
+  const [manualText, setManualText] = useState<string>('')
   const [language, setLanguage] = useState<string>(word.lang)
   const [edited, setEdited] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
@@ -46,6 +46,12 @@ export default function WordPanel({ word }: any) {
   const onManualEntry = (e: any) => {
     setManualText(e.target.value)
     setText(e.target.value)
+  }
+
+  const onPredictionClick = ( e: any ) => {
+    const value = e.currentTarget.value
+    setText(value)
+    setManualText(value)
   }
   
   useEffect(() => {
@@ -118,12 +124,12 @@ export default function WordPanel({ word }: any) {
         </div>
       </RadioGroup>
       <div className="bg-gray-100 p-2 rounded-lg flex flex-col flex-wrap gap-2">
-        <WordInput value={textManual} onChange={onManualEntry} />
+        <WordInput value={manualText} onChange={onManualEntry} />
         <div data-expanded={predictionExpanded}
           onClick={onExpandPrediction}
           className="max-h-36 transition-[max-height] ease-in-out hover:max-h-full data-[expanded=true]:max-h-full flex flex-wrap gap-2 overflow-y-hidden">
           {predictions.map((p: string, index: number) => (
-            <button key={index} onClick={()=>setText(p)} className={classNames(
+            <button value={p} key={index} onClick={onPredictionClick} className={classNames(
               p === text ? 'bg-green-400 text-white' : 'bg-white text-gray-800',
               "font-amiri text-xl",
               "h-fit px-2 py-1 border-2 border-gray-400 rounded-lg flex justify-center items-center"
