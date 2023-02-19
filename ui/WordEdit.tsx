@@ -32,6 +32,7 @@ export default function WordPanel({ word }: any) {
   const router = useRouter()
   const [currentWord, setCurrentWord] = useRakibu('currentWord')
   const languages = ['en', 'ar']
+  const [predictionExpanded, setPredictionExpanded] = useState(false)
 
   const height = word.bbox[1][1] - word.bbox[0][1]
   const width = word.bbox[1][0] - word.bbox[0][0]
@@ -74,6 +75,10 @@ export default function WordPanel({ word }: any) {
     }
   }
 
+  const onExpandPrediction = () => {
+    setPredictionExpanded(state => !state)
+  }
+
   const isMutating = loading || isPending;
 
   return <>
@@ -106,18 +111,22 @@ export default function WordPanel({ word }: any) {
           ))}
         </div>
       </RadioGroup>
-      <div className="bg-gray-100 p-2 rounded-lg flex flex-row flex-wrap gap-2">
+      <div className="bg-gray-100 p-2 rounded-lg flex flex-col flex-wrap gap-2">
         <WordInput value={textManual} onChange={onManualEntry} />
-        {word.predictions.map((p: Prediction, index: number) => (
-          <button key={index} onClick={()=>setText(p.text)} className={classNames(
-            p.text === text ? 'bg-green-400 text-white' : 'bg-white text-gray-800',
-            "font-amiri text-xl",
-            "h-fit px-2 py-1 border-2 border-gray-400 rounded-lg flex justify-center items-center"
-            )}
-          >
-            <span>{ p.text }</span>
-          </button>)
-        )}
+        <div data-expanded={predictionExpanded}
+          onClick={onExpandPrediction}
+          className="max-h-36 transition-[max-height] ease-in-out hover:max-h-full data-[expanded=true]:max-h-full flex flex-wrap gap-2 overflow-y-hidden">
+          {word.predictions.map((p: Prediction, index: number) => (
+            <button key={index} onClick={()=>setText(p.text)} className={classNames(
+              p.text === text ? 'bg-green-400 text-white' : 'bg-white text-gray-800',
+              "font-amiri text-xl",
+              "h-fit px-2 py-1 border-2 border-gray-400 rounded-lg flex justify-center items-center"
+              )}
+            >
+              <span>{ p.text }</span>
+            </button>)
+          )}
+        </div>
       </div>
       <div className="bg-white border-2 rounded-lg flex flex-col gap-2">
         <div className="p-2 flex flex-row flex-wrap gap-2 items-center">
