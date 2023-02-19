@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useTransition } from "react"
+import { useEffect, useMemo, useState, useTransition } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
@@ -33,6 +33,12 @@ export default function WordPanel({ word }: any) {
   const [currentWord, setCurrentWord] = useRakibu('currentWord')
   const languages = ['en', 'ar']
   const [predictionExpanded, setPredictionExpanded] = useState(false)
+
+  const predictions = useMemo<string[]>(()=>{
+    return Array.from(
+      new Set(word.predictions.filter((w: any) => w.lang === language).map((w: any) => w.text))
+    )
+  }, [word.predictions, language])
 
   const height = word.bbox[1][1] - word.bbox[0][1]
   const width = word.bbox[1][0] - word.bbox[0][0]
@@ -116,14 +122,14 @@ export default function WordPanel({ word }: any) {
         <div data-expanded={predictionExpanded}
           onClick={onExpandPrediction}
           className="max-h-36 transition-[max-height] ease-in-out hover:max-h-full data-[expanded=true]:max-h-full flex flex-wrap gap-2 overflow-y-hidden">
-          {word.predictions.map((p: Prediction, index: number) => (
-            <button key={index} onClick={()=>setText(p.text)} className={classNames(
-              p.text === text ? 'bg-green-400 text-white' : 'bg-white text-gray-800',
+          {predictions.map((p: string, index: number) => (
+            <button key={index} onClick={()=>setText(p)} className={classNames(
+              p === text ? 'bg-green-400 text-white' : 'bg-white text-gray-800',
               "font-amiri text-xl",
               "h-fit px-2 py-1 border-2 border-gray-400 rounded-lg flex justify-center items-center"
               )}
             >
-              <span>{ p.text }</span>
+              <span>{ p }</span>
             </button>)
           )}
         </div>
