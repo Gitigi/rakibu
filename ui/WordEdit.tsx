@@ -35,8 +35,13 @@ export default function WordPanel({ word }: any) {
   const [predictionExpanded, setPredictionExpanded] = useState(false)
 
   const predictions = useMemo<string[]>(()=>{
+    let pred = word.predictions.sort((a: Prediction, b: Prediction) => {
+      if(a.model < b.model) return -1
+      else if(a.model > b.model) return 1
+      else if( a.model === b.model) return 0
+    }).reverse()
     return Array.from(
-      new Set(word.predictions.filter((w: any) => w.lang === language).map((w: any) => w.text))
+      new Set(pred.filter((w: any) => w.lang === language).map((w: any) => w.text))
     )
   }, [word.predictions, language])
 
