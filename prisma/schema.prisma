@@ -24,8 +24,10 @@ model Word {
   lang_votes    Float
   lang_accuracy Float
   rakibu        Boolean      @default(false)
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
   line          Line         @relation(fields: [page, section, line_index], references: [page, section, index])
-  predictions    Prediction[]
+  predictions   Prediction[]
 
   @@unique([page, section, line_index, index], name: "wordIdentifier")
   @@map("word")
