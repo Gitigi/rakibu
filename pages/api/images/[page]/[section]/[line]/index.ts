@@ -13,9 +13,11 @@ export default async function handler(
   const page_json = JSON.parse(data)
   let line = page_json['sections'][section][line_idx]
   let bbox = line['bbox']
-  let width = bbox[1][0] - bbox[0][0]
-  let height = bbox[1][1] - bbox[0][1]
-  let img = await sharp(`page_images/${page}.png`).extract({ width, height, left: bbox[0][0], top: bbox[0][1] }).png().toBuffer()
+  let left = bbox[0][0] - 20
+  let top = bbox[0][1] - 10
+  let width = (bbox[1][0] - bbox[0][0]) + 40
+  let height = (bbox[1][1] - bbox[0][1]) + 20
+  let img = await sharp(`page_images/${page}.png`).extract({ width, height, left, top }).png().toBuffer()
   res.setHeader('Content-Type', 'image/png')
   res.status(200).send(img)
 }

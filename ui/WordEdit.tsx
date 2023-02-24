@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useMemo, useState, useTransition } from "react"
+import { Fragment, useEffect, useMemo, useState, useTransition } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-import { CheckBadgeIcon } from '@heroicons/react/20/solid'
+import { CheckBadgeIcon, EyeIcon } from '@heroicons/react/20/solid'
 
-import { RadioGroup } from '@headlessui/react'
+import { Dialog, RadioGroup, Transition } from '@headlessui/react'
 import { Prediction } from "@prisma/client"
 import classNames from "@/lib/classNames"
 import WordInput from "./WordInput"
@@ -22,6 +22,15 @@ function WordImage({ word }: any) {
   </Link>
 }
 
+function LineImage({ word }: any) {
+  const path = usePathname()
+  const height = word.bbox[1][1] - word.bbox[0][1]
+  const width = word.bbox[1][0] - word.bbox[0][0]
+  return <div>
+    <Image className="" height={height} width={width} src={`/api/images/${word.page}/${word.section}/${word.index}`} alt="line" />
+  </div>
+}
+
 export default function WordPanel({ word }: any) {
   const [text, setText] = useState<string>(word.text)
   const [manualText, setManualText] = useState<string>('')
@@ -32,6 +41,7 @@ export default function WordPanel({ word }: any) {
   const router = useRouter()
   const [currentWord, setCurrentWord] = useRakibu('currentWord')
   const languages = ['en', 'ar']
+  let [isLineImageOpen, setLineImageOpen] = useState(false)
 
   const predictions = useMemo<string[]>(()=>{
     let pred = word.predictions.sort((a: Prediction, b: Prediction) => {
@@ -93,6 +103,14 @@ export default function WordPanel({ word }: any) {
 
   const isMutating = loading || isPending;
 
+  function closeLineImageModal() {
+    setLineImageOpen(false)
+  }
+
+  function openLineImageModal() {
+    setLineImageOpen(true)
+  }
+
   return <>
     <div className="flex-1 flex flex-col p-2 gap-y-2 overflow-y-scroll">
       <div className="border-2 flex-shrink-0 border-blue-100 rounded-lg self-stretch bg-gray-50 h-12 flex justify-center items-center">
@@ -149,6 +167,7 @@ export default function WordPanel({ word }: any) {
           <p className="text-white">
             <span>{word.line.page}</span>&nbsp;
             <span>{word.line.section}-{word.line.index}</span>
+            <span className="mx-2 my-1 cursor-pointer" onClick={openLineImageModal}><EyeIcon className="w-4 h-4 inline-block" /></span>
           </p>
         </div>
       </div>
@@ -164,5 +183,41 @@ export default function WordPanel({ word }: any) {
       </svg> : null }
       { edited ? 'Save' : 'Approve' }
     </button>
+
+    <Transition appear show={isLineImageOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeLineImageModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <div className="mt-2">
+                    <LineImage word={word.line} />
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
   </>
 }
