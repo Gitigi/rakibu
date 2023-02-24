@@ -10,11 +10,24 @@ export default async function Word({ params }: any) {
       predictions: true,
       line: {
         include: {
-          words: true
+          words: {
+            select: {
+              id: true,
+              text: true,
+              bbox: true,
+              page: true,
+              section: true,
+              line_index: true,
+              index: true
+            }
+          }
         }
       }
     }
   })
+
+  word.created_at = word.created_at.toString()
+  word.updated_at = word.updated_at.toString()
 
   return <div className="h-full flex flex-col gap-y-2">
     <WordEdit word={word} />
