@@ -32,7 +32,6 @@ export default function WordPanel({ word }: any) {
   const router = useRouter()
   const [currentWord, setCurrentWord] = useRakibu('currentWord')
   const languages = ['en', 'ar']
-  const [predictionExpanded, setPredictionExpanded] = useState(false)
 
   const predictions = useMemo<string[]>(()=>{
     let pred = word.predictions.sort((a: Prediction, b: Prediction) => {
@@ -92,10 +91,6 @@ export default function WordPanel({ word }: any) {
     }
   }
 
-  const onExpandPrediction = () => {
-    setPredictionExpanded(state => !state)
-  }
-
   const isMutating = loading || isPending;
 
   return <>
@@ -128,11 +123,10 @@ export default function WordPanel({ word }: any) {
           ))}
         </div>
       </RadioGroup>
-      <div className="bg-gray-100 p-2 rounded-lg flex flex-col flex-wrap gap-2">
+      <div className="bg-gray-100 p-2 rounded-lg flex flex-col gap-2">
         <WordInput value={manualText} onChange={onManualEntry} />
-        <div data-expanded={predictionExpanded}
-          onClick={onExpandPrediction}
-          className="max-h-36 transition-[max-height] ease-in-out hover:max-h-full data-[expanded=true]:max-h-full flex flex-wrap gap-2 overflow-y-hidden">
+        <div
+          className="h-full flex flex-wrap gap-2 overflow-y-hidden">
           {predictions.map((p: string, index: number) => (
             <button value={p} key={index} onClick={onPredictionClick} className={classNames(
               p === text ? 'bg-green-400 text-white' : 'bg-white text-gray-800',
