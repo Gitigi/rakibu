@@ -58,8 +58,10 @@ async function loadPreditions(dir) {
 
 async function main() {
   await loadWords('json_files')
-  loadPreditions('fontsize-48')
-  loadPreditions('fontsize-52')
+  let preditions = await fs.readdir('predictions')
+  for(pred of preditions) {
+    loadPreditions(path.join('predictions', pred))
+  }
 }
 
 main()
