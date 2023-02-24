@@ -126,7 +126,7 @@ def evaluate_pred(predictions, value='text'):
   for i in predictions:
     c[i[0]] += i[1]
   pred_value, count = next(iter(sorted(c.items(), key=lambda v: v[1], reverse=True)), ('', 0))
-  accuracy = min(map(lambda v: v[2], filter(lambda pred: pred[0] == pred_value, predictions))) if pred_value else 0
+  accuracy = max(map(lambda v: v[2], filter(lambda pred: pred[0] == pred_value, predictions))) if pred_value else 0
   votes = len(list(filter(lambda v: v[0] == pred_value, predictions))) / len(predictions) if pred_value else 0
   
   return {value: pred_value, f'{value}_votes': votes, f'{value}_accuracy': accuracy} 
