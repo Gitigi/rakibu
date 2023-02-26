@@ -141,10 +141,10 @@ export default function WordPanel({ word }: any) {
           ))}
         </div>
       </RadioGroup>
-      <div className="bg-gray-100 p-2 rounded-lg flex flex-col gap-2">
+      <div className="flex-1 min-h-[220px] bg-gray-100 p-2 rounded-lg flex flex-col gap-2">
         <WordInput value={manualText} onChange={onManualEntry} />
         <div
-          className="h-full flex flex-wrap gap-2 overflow-y-hidden">
+          className="h-full flex content-start flex-wrap gap-2 overflow-y-scroll">
           {predictions.map((p: string, index: number) => (
             <button value={p} key={index} onClick={onPredictionClick} className={classNames(
               p === text ? 'bg-green-400 text-white' : 'bg-white text-gray-800',
