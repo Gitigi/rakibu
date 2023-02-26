@@ -183,7 +183,6 @@ export default function WordPanel({ word }: any) {
       </svg> : null }
       { edited ? 'Save' : 'Approve' }
     </button>
-
     <Transition appear show={isLineImageOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeLineImageModal}>
           <Transition.Child
@@ -219,5 +218,6 @@ export default function WordPanel({ word }: any) {
           </div>
         </Dialog>
       </Transition>
+    <div id="keyboard" className="relative w-full"/>
   </>
 }

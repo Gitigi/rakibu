@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Tab } from '@headlessui/react'
 
 import classNames from "@/lib/classNames";
@@ -11,12 +11,27 @@ const tabs: any[] = [
   { name: 'Greek', current: false },
 ]
 
-export default function Keyboard({ onKeyClick }: any) {
+function KeyboardComponent({ inputRef }: any) {
   const [selectedIndex, setSelectedIndex] = useState<any>(0)
 
-  const selectedTab = (e: any) => {
-    setSelectedIndex(e.target.value)
-  }
+  const focusOnInput = useCallback(() => {
+    inputRef.current?.focus()
+  }, [inputRef])
+
+  const onKeyClick = useCallback((e: any) => {
+    const key = e.target.getAttribute('data-value')
+    let value = inputRef.current.value
+    let pos = inputRef.current.selectionStart
+    value = value.substr(0, inputRef.current.selectionStart) + key + value.substr(inputRef.current.selectionStart)
+
+    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
+    nativeInputValueSetter?.call(inputRef.current, value);
+    var ev2 = new Event('input', { bubbles: true});
+    inputRef.current.dispatchEvent(ev2);
+
+    inputRef.current.selectionEnd = inputRef.current.selectionStart = pos + key.length
+    focusOnInput()
+  }, [inputRef, focusOnInput])
 
   const preventFocus = (e: any) => {
     var el: any = document.activeElement
@@ -24,26 +39,9 @@ export default function Keyboard({ onKeyClick }: any) {
       setTimeout(()=>el?.focus())
     }
   }
-  return <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex} as="div" className="border border-gray-600 rounded-lg">
-      <div>
-        <div className="sm:hidden">
-          <label htmlFor="tabs" className="sr-only">
-            Select a tab
-          </label>
-          {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
-          <select
-            id="tabs"
-            name="tabs"
-            className="bg-white text-gray-800 py-2 pl-4 block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-            defaultValue={tabs.find((tab) => tab.current).name}
-            onChange={selectedTab}
-          >
-            {tabs.map((tab, index) => (
-              <option key={tab.name} value={index}>{tab.name}</option>
-            ))}
-          </select>
-        </div>
-        <div className="hidden sm:block">
+  return <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex} as="div" className="border border-gray-300 rounded-lg shadow-lg">
+      <div className="bg-white">
+        <div className="">
           <div className="border-b border-gray-200">
             <Tab.List as="nav" className="-mb-px flex" aria-label="Tabs">
               {tabs.map((tab) => (
@@ -69,7 +67,7 @@ export default function Keyboard({ onKeyClick }: any) {
         <Tab.Panel as="div" className="text-gray-800 bg-white grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
           {basicKeys.map((key: any, index)=> (
             // <kbd key={index}>{ key[0] ==='\u200c' ? <Image height={30} width={30} src="/img/zwnj.jpg" alt="zero-width non-joiner"/> : key[0] }</kbd>
-            <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="font-amiri flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer data-[key=enter]:row-span-2 data-[key=space]:col-span-5">
+            <kbd onClick={onKeyClick} onMouseDown={preventFocus} data-value={ key[0] } data-key={ key[1] } key={index} className="font-amiri flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer data-[key=enter]:row-span-2 data-[key=space]:col-span-5">
               { key[0] === String.raw`\n` ? "\u2937" : key[0] === '\u200c' ? zeroWidthSvg : key[0]}
             </kbd>
           ))}
@@ -77,13 +75,13 @@ export default function Keyboard({ onKeyClick }: any) {
         <Tab.Panel as="div" className="text-gray-800 bg-white grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
           {latinAlt.map((key: any, index)=> (
             // <kbd key={index}>{ key[0] ==='\u200c' ? <Image height={30} width={30} src="/img/zwnj.jpg" alt="zero-width non-joiner"/> : key[0] }</kbd>
-            <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer data-[key=enter]:row-span-2 data-[key=space]:col-span-5">
+            <kbd onClick={onKeyClick} onMouseDown={preventFocus} data-value={ key[0] } data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer data-[key=enter]:row-span-2 data-[key=space]:col-span-5">
               { key[0] === String.raw`\n` ? "\u2937" : key[0]}
             </kbd>
           ))}
           {supNumber.map((key: any, index)=> (
             // <kbd key={index}>{ key[0] ==='\u200c' ? <Image height={30} width={30} src="/img/zwnj.jpg" alt="zero-width non-joiner"/> : key[0] }</kbd>
-            <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer">
+            <kbd onClick={onKeyClick} onMouseDown={preventFocus} data-value={ key[0] } data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer">
               { key[0] === String.raw`\n` ? "\u2937" : key[0]}
             </kbd>
           ))}
@@ -91,7 +89,7 @@ export default function Keyboard({ onKeyClick }: any) {
         <Tab.Panel as="div" className="text-gray-800 bg-white grid grid-cols-12 gap-1 p-0.5 border border-gray-100 m-0.5 rounded-md">
           {greek.map((key: any, index)=> (
             // <kbd key={index}>{ key[0] ==='\u200c' ? <Image height={30} width={30} src="/img/zwnj.jpg" alt="zero-width non-joiner"/> : key[0] }</kbd>
-            <kbd onClick={onKeyClick.bind(null, key[0])} onMouseDown={preventFocus} data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer">
+            <kbd onClick={onKeyClick} onMouseDown={preventFocus} data-value={ key[0] } data-key={ key[1] } key={index} className="flex flex-col justify-center items-center rounded-md p-0.5 shadow-lg cursor-pointer">
               { key[0] === String.raw`\n` ? "\u2937" : key[0] === '\u200c' ? zeroWidthSvg : key[0]}
             </kbd>
           ))}
@@ -99,6 +97,9 @@ export default function Keyboard({ onKeyClick }: any) {
       </Tab.Panels>
     </Tab.Group>
 }
+const Keyboard = React.memo(KeyboardComponent)
+export default Keyboard
+
 const circle = "\u25cc"; // dotted circle for diacritics
 
 const zeroWidthSvg = <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
