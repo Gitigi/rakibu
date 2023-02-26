@@ -164,5 +164,6 @@ export default function WordPanel({ word }: any) {
       </svg> : null }
       { edited ? 'Save' : 'Approve' }
     </button>
+    <div id="keyboard" className="relative w-full"/>
   </>
 }
