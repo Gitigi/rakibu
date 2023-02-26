@@ -7,9 +7,9 @@ import { usePopper } from 'react-popper'
 import Keyboard from './Keyboard'
 import Portal from './Portal'
 
-export default function KeyboardButton({ word, parentRef }: any) {
+export default function KeyboardButton({ inputRef }: any) {
   let [popperElement, setPopperElement] = useState<any>()
-  let { styles, attributes } = usePopper(parentRef.current, popperElement, {
+  let { styles, attributes } = usePopper(inputRef.current, popperElement, {
     placement: 'bottom',
     modifiers: [
       {
@@ -34,22 +34,12 @@ export default function KeyboardButton({ word, parentRef }: any) {
   })
 
   const focusOnInput = useCallback(() => {
-    parentRef.current?.focus()
-  }, [parentRef])
-
-  const onKeyClick = useCallback((key: string) => {
-    let value = parentRef.current.value
-    let pos = parentRef.current.selectionStart
-    value = value.substr(0, parentRef.current.selectionStart) + key + value.substr(parentRef.current.selectionStart)
-
-    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
-    nativeInputValueSetter?.call(parentRef.current, value);
-    var ev2 = new Event('input', { bubbles: true});
-    parentRef.current.dispatchEvent(ev2);
-
-    parentRef.current.selectionEnd = parentRef.current.selectionStart = pos + key.length
-    focusOnInput()
-  }, [parentRef, focusOnInput])
+    inputRef.current?.focus()
+  }, [inputRef])
+  
+  const preventFocus = (e: any) => {
+    e.preventDefault()
+  }
 
   const [showKeyboard, setShowKeyboard] = useState(false)
   const toggleShowKeyboard = () => {
@@ -61,7 +51,7 @@ export default function KeyboardButton({ word, parentRef }: any) {
     <Popover className="relative">
       <div className="contents">
         <Popover.Button className="contents group">
-          <kbd onClick={toggleShowKeyboard} className="h-full inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400 group-data-[headlessui-state=open]:border group-data-[headlessui-state=open]:border-blue-300">
+          <kbd onClick={toggleShowKeyboard} onMouseDown={preventFocus} className="h-full inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400 group-data-[headlessui-state=open]:border group-data-[headlessui-state=open]:border-blue-300">
             ⌘K
           </kbd>
         </Popover.Button>
@@ -93,7 +83,7 @@ export default function KeyboardButton({ word, parentRef }: any) {
                 `}
                 ></div>
                 <div className="bg-white overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                  <Keyboard onKeyClick={onKeyClick} />
+                  <Keyboard inputRef={inputRef} />
                 </div>
               </Popover.Panel>
             </div>
