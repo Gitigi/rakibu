@@ -116,8 +116,8 @@ export default function WordPanel({ word }: any) {
       <div className="border-2 flex-shrink-0 border-blue-100 rounded-lg self-stretch bg-gray-50 h-12 flex justify-center items-center">
         <Image className="" height={height} width={width} src={`/api/images/${word.page}/${word.section}/${word.line_index}/${word.index}`} alt="word" />
       </div>
-      <button onClick={_ => setManualText(text)} className="relative border-2 flex-shrink-0 border-blue-100 rounded-lg py-1 text-center self-stretch text-3xl tracking-wide font-semibold text-gray-600 overflow-x-scroll">
-        <span className="font-amiri font-bold text-3xl subpixel-antialiased">{ text }</span>
+      <button onClick={_ => setManualText(text)} className="relative border-2 flex-shrink-0 border-blue-100 rounded-lg py-1 text-center self-stretch text-gray-600">
+        <span className="font-amiri font-bold text-3xl whitespace-normal break-normal">{ text }</span>
         {word.rakibu && <div className="h-full absolute right-0 top-0 align-middle"><CheckBadgeIcon className="h-8 w-8 text-blue-500 inline-block" /></div>}
         {!text && <span className="invisible">_</span>}
       </button>
