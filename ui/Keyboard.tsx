@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react'
 
 import classNames from "@/lib/classNames";
@@ -11,8 +11,16 @@ const tabs: any[] = [
   { name: 'Greek', current: false },
 ]
 
-function KeyboardComponent({ inputRef }: any) {
+function KeyboardComponent({ inputRef, language }: any) {
   const [selectedIndex, setSelectedIndex] = useState<any>(0)
+
+  useEffect(()=>{
+    let langKeys: {[key: string]: number} = {
+      'ar': 0,
+      'en': 1
+    }
+    setSelectedIndex(langKeys[language] || 0)
+  }, [language])
 
   const focusOnInput = useCallback(() => {
     inputRef.current?.focus()

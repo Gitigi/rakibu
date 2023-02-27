@@ -7,7 +7,7 @@ import { usePopper } from 'react-popper'
 import Keyboard from './Keyboard'
 import Portal from './Portal'
 
-export default function KeyboardButton({ inputRef }: any) {
+export default function KeyboardButton({ inputRef, language }: any) {
   let [popperElement, setPopperElement] = useState<any>()
   let { styles, attributes } = usePopper(inputRef.current, popperElement, {
     placement: 'bottom',
@@ -83,7 +83,7 @@ export default function KeyboardButton({ inputRef }: any) {
                 `}
                 ></div>
                 <div className="bg-white overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                  <Keyboard inputRef={inputRef} />
+                  <Keyboard inputRef={inputRef} language={language} />
                 </div>
               </Popover.Panel>
             </div>
